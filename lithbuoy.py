@@ -232,7 +232,6 @@ np.savetxt('Trho_%s_%s_vel_%d.txt' % (mantle_type, experiment_number,velocity),d
 #============================================================================
 # Func: Get initial velocity distribution
 #============================================================================
-
 def get_vel_init():
     # Purpose: This subroutine ontructs initial temperature and velocity
     #          structures.
@@ -257,7 +256,6 @@ def get_vel_init():
                 vx[j, i] = 0 * xh[j, i] + pres_vx
                 vy[j, i] = 0 * yh[j, i] + pres_vy
     return [vx, vy]
-
 #============================================================================
 # Func: move_vel
 #============================================================================
@@ -276,7 +274,6 @@ def move_vel():
                 vx[j, i] = 0 * xh[j, i] + pres_vx
                 vy[j, i] = 0 * yh[j, i] + pres_vy
     return [vx, vy]
-
 #============================================================================
 # Func: Advection -- rho and T
 #============================================================================
@@ -326,7 +323,6 @@ def advect(temp,dens,P):
     temp_advected = temp + dt * dfdt_adv_temp
     P_advected = P + dt * dfdt_adv_P
     return [temp_advected, rho_advected, P_advected]
-
 #============================================================================
 # Func: Deformation box
 #============================================================================
@@ -350,11 +346,9 @@ def deform_box():
         xs, ys = xs, ys
 
     return [xs, ys]
-
 #============================================================================
 # Func: Get Pressure from Density
 #============================================================================
-
 def get_pressure(rho):
     ##
     # Purpose: This subroutine calculates the pressure distribution in the
@@ -367,20 +361,12 @@ def get_pressure(rho):
     P_calc[0::, 0::] = ((yy[0::, 0::]) * gy * rho[0::, 0::]) / 1e5   # Pa-> bar
 
     return P_calc  # return initial density distribution in bar
-
 #============================================================================
 # Func: the effect of temp. and pressure on density 
 #============================================================================
-
 def density_P(P_new0, P_old0, rho_old0):#(new_temp, old_temp, old_rho):
-
     # Purpose: This subroutine calculates the density distribution, taking
     #         both temperature and pressure into consideration
-
-#    T_old0 = old_temp.copy()
-#    T_new0 = new_temp.copy()
-#    rho_old0 = old_rho.copy()
-    
     rho_TP = np.ones(np.shape(xx))
     [my, mx] = np.shape(xx)
 
@@ -409,17 +395,10 @@ def density_P(P_new0, P_old0, rho_old0):#(new_temp, old_temp, old_rho):
                 rho_TP[j, i] = rho_old0[j, i] + drhodP_lith * (P_new0[j, i] - P_old0[j, i])
             
     return rho_TP
-
-#============================================================================
-    
+#============================================================================    
 def density_T(T_new0, T_old0, rho_old0):#(new_temp, old_temp, old_rho):
-
     # Purpose: This subroutine calculates the density distribution, taking
     #         both temperature and pressure into consideration
-
-#    T_old0 = old_temp.copy()
-#    T_new0 = new_temp.copy()
-#    rho_old0 = old_rho.copy()
     
     rho_TP = np.ones(np.shape(xx))
     [my, mx] = np.shape(xx)
@@ -457,7 +436,6 @@ def density_T(T_new0, T_old0, rho_old0):#(new_temp, old_temp, old_rho):
                 # + drhodP_lith * (P_dummy[j, i] - P_old[j, i])
         
     return rho_TP
-
 #============================================================================
 # Func: 2D Heat Advection-Diffusion
 #============================================================================
@@ -475,9 +453,6 @@ def diffuse(temp,dens):#(old_temp, old_rho):
     #           dy = discretised grid spacing in y [m]
     #           kappa = thermal diffusivity [m2/s]
     #           dt = total time step
-    
-#    temp = old_temp.copy()
-#    dens = old_rho.copy()
     ############### Temp. Diffusion ##################
     # Initialize a timestep df/dt vector:
     dfdt_diffus = np.zeros(np.shape(temp))
@@ -509,7 +484,6 @@ def diffuse(temp,dens):#(old_temp, old_rho):
     temp_diffus = temp + (dt * dfdt_diffus)  # both diff & adv effects
     
     return temp_diffus
-
 #============================================================================
 ## Func: Integrate
 #============================================================================
@@ -527,7 +501,6 @@ def integrate(rho_init00, rho_new00, effect):
         slab_rho = np.subtract(slab_rho_whole,slab_rho_triang)
     weight_diff = (slab_rho)*(dx * dy)*g  
     return weight_diff
-
 #============================================================================
 ## Func: Impose temp
 #============================================================================
@@ -536,9 +509,7 @@ def imposeT(new_temp, init_temp):
     T_adjust0[np.int(box_moho / dy):np.int(slab_thickness / dy),:] = new_temp[np.int(box_moho / dy):np.int(slab_thickness / dy), :]
     T_adjust0[np.where(vy > 0.)] = new_temp[np.where(vy > 0.)]
     return T_adjust0
-
 ## -----------------END OF SUB-ROUTINES DEFINITIONS --------------------- ##
-
 
 #=============================================================================
 beta_dummy = 180 - ((np.rad2deg(alpha) / 2.0) + 90.0)
