@@ -24,14 +24,14 @@ Created 21/08/2019
 8--Oceanic 110 km thick
 -----------------------
 """
-man_type=0
+man_type=1
 ############################################
 experiment_number = 'supertest' # for the .savefig title -- CHANGE to prevent overwriting
 velocity = 80  # mm/year
 nt = 51     # nº of steps to run
 save_interval = 10     # save every n step
-save_figure = False # True or False
-plot_im_subplots = False
+save_figure = True # True or False
+plot_im_subplots = True
 plot_check = False 
 ############################################
 
@@ -59,4 +59,5 @@ kappa_lith = 1e-6
 kappa_asth = 1e-5
 ############################################
 
-import LithBuoy
+if __name__ == '__main__':
+	import lithbuoy

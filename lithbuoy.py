@@ -732,7 +732,7 @@ for it in range(0, nt):
                           str(it + 1) + ', v=' + str(velocity) + '$mm$ $yr^{-1}$'+
                           ', Shortening='+str("%.2f" % shorten)+'$km$',fontsize=15)
             ax1.set_xlabel('Distance in x-direction ($km$) $\longrightarrow$',fontsize=14)
-            ax1.set_ylabel('$\longleftarrow$ Depth ($km$)',fontsize=14)
+            ax1.set_ylabel('Depth ($km$)',fontsize=14)
             ax1.set_xlim(0,w)
             ax1.set_ylim(h,0)
 #============================================================================
@@ -761,27 +761,27 @@ for it in range(0, nt):
                           str(it + 1) + ', v=' + str(velocity) + '$mm$ $yr^{-1}$'+
                           r", $\Delta \rho_{LAB}$="+str("%.0f" % drho_lab),fontsize=15)
                           #r", $\Delta \rho_{LAB}$="+str("%.0f" % delrho[rr]),fontsize=15)
-            ax5.set_xlabel('Distance in x-direction ($km$) $\longrightarrow$',fontsize=14)
-            ax5.set_ylabel('$\longleftarrow$ Depth ($km$)',fontsize=14)
+            ax5.set_xlabel('Distance in x-direction ($km$)',fontsize=14)
+            ax5.set_ylabel('Depth ($km$)',fontsize=14)
             ax5.axis('equal')
             ax5.set_xlim(0,w)
             ax5.set_ylim(h,0)
 #============================================================================
             if ys[2]>=slab_thickness+(1e-4*dy):
-                ax6.plot(xbuoy[1::], buoy_tot[1::], 'k', linewidth='2', label='W_tot')
-                ax6.plot(xbuoy[1::], buoy_adv_a_differ[1::], 'b', label='W_adv above LAB')
-                ax6.plot(xbuoy[1::], buoy_adv_b_differ[1::], 'g',linewidth='2', label='W_adv below LAB')
-                ax6.plot(xbuoy[1::], buoy_adv[1::], 'm', label='W_adv')
-                ax6.plot(xbuoy[1::], buoy_diffus_differ[1::], '--r', label='W_diffus')
-#                ax6.plot(xbuoy[1::], buoy_sum[1::], 'grey', label='W_sum')
+                ax6.plot(xbuoy[1::], buoy_tot[1::], 'k', linewidth='2', label='$F_b$')
+                # ax6.plot(xbuoy[1::], buoy_adv_a_differ[1::], 'b', label='W_adv above LAB')
+                # ax6.plot(xbuoy[1::], buoy_adv_b_differ[1::], 'g',linewidth='2', label='W_adv below LAB')
+                ax6.plot(xbuoy[1::], buoy_adv[1::], 'g', label='$F_{advection}$')
+                ax6.plot(xbuoy[1::], buoy_diffus_differ[1::], 'r', label='$F_{diffusion}$')
+                #                ax6.plot(xbuoy[1::], buoy_sum[1::], 'grey', label='W_sum')
                 
                 ax6.grid(linestyle='dotted')
-                ax6.legend(loc='best',fontsize=10)
-                ax6.set_ylim(buoy_ylim)
+                ax6.legend(loc='best',fontsize=14)
+                ax6.set_ylim(params.buoy_ylim)
                 ax6.set_title('Buoyancy Plot',fontsize=15)
                 ax6.set_xlabel('Time (Myr)',fontsize=14)
-                ax6.set_ylabel('Buoyancy ($Nm^{-1}$)',fontsize=14)
-                ax6.tick_params(labelsize=12)           
+                ax6.set_ylabel('Buoyancy Force, $F_b$ ($Nm^{-1}$)',fontsize=14)
+                ax6.tick_params(labelsize=12)
 #============================================================================
             # Plot Temp. profiles
             ytick_prof = [np.int(v) for v in np.arange(dmoho/1000, h / 1000, 100)]
@@ -800,7 +800,7 @@ for it in range(0, nt):
             ax3.grid(linestyle='dotted')
             ax3.set_title('Temp-Depth profile', fontsize=14)
             ax3.set_xlabel('Temperature ($^{\circ}C$)', fontsize=14)
-            ax3.set_ylabel('$\longleftarrow$ Depth ($km$)', fontsize=14)
+            ax3.set_ylabel('Depth ($km$)', fontsize=14)
             ax3.set_ylim(h,0)
             ax3.set_yticklabels(ytick_prof)
             ax3.xaxis.set_ticks(np.arange(min(T_prof), max(T_prof), 500))
@@ -818,7 +818,7 @@ for it in range(0, nt):
             ax4.grid(linestyle='dotted')
             ax4.set_title('Density-Depth profile', fontsize=14)
             ax4.set_xlabel('Density ($kgm^{-3}$)', fontsize=14)
-            ax4.set_ylabel('$\longleftarrow$ Depth ($km$)', fontsize=14)
+            ax4.set_ylabel('Depth ($km$)', fontsize=14)
             ax4.set_ylim(h,0)
             ax4.set_yticklabels(ytick_prof)
             ax4.xaxis.set_ticks(np.arange(np.round(min(rho_prof),-2), max(rho_prof), 200))
@@ -839,7 +839,7 @@ for it in range(0, nt):
                          os.mkdir(dir1)
                     print("Images in directory %s" % dir1)
                     os.chdir(dir1)
-                    plt.savefig(str(experiment_number) + str(mantle_type) +'_subplots' + str(it + 1) + '.png', format='png', dpi=300)
+                    plt.savefig(str(params.experiment_number) + str(mantle_type) +'_subplots' + str(it+1) + '.png', format='png', dpi=300)
 #============================================================================
 # END OF Visualisations
 #============================================================================
@@ -851,7 +851,8 @@ for it in range(0, nt):
         bin_file=open(str(experiment_number) + str(mantle_type) +str(it + 1) + '.bin',"wb")
         pickle.dump((T_new,rho_new,P_init,T_init,rho_init,P_init, \
                      buoy_tot,buoy_adv_a_differ,buoy_adv_b_differ, \
-                     buoy_adv, buoy_diffus_differ, xbuoy, Tslice2, rho_slice2,tmyrs), bin_file)
+                     buoy_adv, buoy_diffus_differ, xbuoy, Tslice2, \
+                     rho_slice2,tmyrs, xs, ys), bin_file)
         bin_file.close()
 
 #============================================================================

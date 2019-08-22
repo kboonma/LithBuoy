@@ -31,7 +31,7 @@ import matplotlib.ticker as tkr
 import params
 #from Stokes2D import Stokes2Dfunc 
 from matplotlib.colors import LinearSegmentedColormap
-import LithCall as lc
+import lithcall as lc
 
 
 #from LithBuoy import * 
@@ -59,7 +59,7 @@ if not os.path.exists(dir):
 os.chdir(dir)
 
 
-fnum=[1,21,31,41,51]
+fnum=[101,201,301,351, 401,441]
 for i in fnum:
 
     fin=open(str(params.experiment_number) + str(mantle_type) + str(i) + '.bin',"rb")
@@ -79,6 +79,8 @@ for i in fnum:
     Tslice2=data[12]
     rho_slice2=data[13]
     tmyrs=data[14]
+    xs=data[15]
+    ys=data[16]
     
     shorten= (params.velocity * 1e-3 / (365 * 24 * 3600)) * (tmyrs*lc.secinmyr) / 1e3
     
@@ -149,7 +151,7 @@ for i in fnum:
                      #clim=(0, Tbottom),
                      interpolation='bilinear',
                      cmap=CBtemp_map)
-    #ax1.plot(xs, ys, 'k', alpha=0.5)
+    ax1.plot(xs, ys, 'k', alpha=0.5)
     ax1.set_ylim(0,600)
     ax1.invert_yaxis()
        
@@ -203,7 +205,7 @@ for i in fnum:
     cbar = plt.colorbar(im5, cax=cax5, extend='both')
     
     # cbar.ax.invert_yaxis()
-    #ax5.plot(xs, ys, 'k', alpha=0.5)
+    ax5.plot(xs, ys, 'k', alpha=0.5)
     cbar.ax.set_title('$kgm^{-3}$',fontsize=12)
     cbar.ax.tick_params(labelsize=12) 
     ax5.set_title(mantle_type+ r" $\Delta \rho$"+', t=' + str("%.2f" % tmyrs) + ' Myr, tstep =' +
@@ -217,19 +219,19 @@ for i in fnum:
     ax5.set_ylim(params.h,0)
     #================================================================
     #if ys[2]>=lc.slab_thickness+(1e-4*dy):
-    ax6.plot(xbuoy[1::], buoy_tot[1::], 'k', linewidth='2', label='W_tot')
-    ax6.plot(xbuoy[1::], buoy_adv_a_differ[1::], 'b', label='W_adv above LAB')
-    ax6.plot(xbuoy[1::], buoy_adv_b_differ[1::], 'g',linewidth='2', label='W_adv below LAB')
-    ax6.plot(xbuoy[1::], buoy_adv[1::], 'm', label='W_adv')
-    ax6.plot(xbuoy[1::], buoy_diffus_differ[1::], '--r', label='W_diffus')
+    ax6.plot(xbuoy[1::], buoy_tot[1::], 'k', linewidth='2', label='$F_b$')
+    # ax6.plot(xbuoy[1::], buoy_adv_a_differ[1::], 'b', label='W_adv above LAB')
+    # ax6.plot(xbuoy[1::], buoy_adv_b_differ[1::], 'g',linewidth='2', label='W_adv below LAB')
+    ax6.plot(xbuoy[1::], buoy_adv[1::], 'g', label='$F_{advection}$')
+    ax6.plot(xbuoy[1::], buoy_diffus_differ[1::], 'r', label='$F_{diffusion}$')
     #                ax6.plot(xbuoy[1::], buoy_sum[1::], 'grey', label='W_sum')
     
     ax6.grid(linestyle='dotted')
-    ax6.legend(loc='best',fontsize=10)
+    ax6.legend(loc='best',fontsize=14)
     ax6.set_ylim(params.buoy_ylim)
     ax6.set_title('Buoyancy Plot',fontsize=15)
     ax6.set_xlabel('Time (Myr)',fontsize=14)
-    ax6.set_ylabel('Buoyancy ($Nm^{-1}$)',fontsize=14)
+    ax6.set_ylabel('Buoyancy Force, $F_b$ ($Nm^{-1}$)',fontsize=14)
     ax6.tick_params(labelsize=12)
        
     #======================================================================
@@ -250,7 +252,7 @@ for i in fnum:
     ax3.grid(linestyle='dotted')
     ax3.set_title('Temp-Depth profile', fontsize=14)
     ax3.set_xlabel('Temperature ($^{\circ}C$)', fontsize=14)
-    ax3.set_ylabel('$\longleftarrow$ Depth ($km$)', fontsize=14)
+    ax3.set_ylabel('Depth ($km$)', fontsize=14)
     ax3.set_ylim(params.h,0)
     ax3.set_yticklabels(ytick_prof)
     ax3.xaxis.set_ticks(np.arange(min(T_init[:,1]), max(T_init[:,1]), 500))
@@ -268,7 +270,7 @@ for i in fnum:
     ax4.grid(linestyle='dotted')
     ax4.set_title('Density-Depth profile', fontsize=14)
     ax4.set_xlabel('Density ($kgm^{-3}$)', fontsize=14)
-    ax4.set_ylabel('$\longleftarrow$ Depth ($km$)', fontsize=14)
+    ax4.set_ylabel('Depth ($km$)', fontsize=14)
     ax4.set_ylim(params.h,0)
     ax4.set_yticklabels(ytick_prof)
     ax4.xaxis.set_ticks(np.arange(np.round(min(rho_init[:,1]),-2), max(rho_init[:,1]), 200))
