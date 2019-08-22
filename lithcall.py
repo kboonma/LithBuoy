@@ -9,24 +9,24 @@ Created 21/08/2019
 #=======================================================================#
 """
 
-import sys
+# import sys
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-import os
-from pylab import rcParams
-from copy import copy, deepcopy
-import matplotlib.gridspec as gridspec
-import pandas as pd
-import math
-import csv
-import pickle
-import matplotlib.ticker as tkr
-#from Stokes2D import Stokes2Dfunc 
-from matplotlib.colors import LinearSegmentedColormap
-import params 
-import mantle
+# import matplotlib
+# import matplotlib.pyplot as plt
+# from mpl_toolkits.axes_grid1 import make_axes_locatable
+# import os
+# from pylab import rcParams
+# from copy import copy, deepcopy
+# import matplotlib.gridspec as gridspec
+# import pandas as pd
+# import math
+# import csv
+# import pickle
+# import matplotlib.ticker as tkr
+# #from Stokes2D import Stokes2Dfunc 
+# from matplotlib.colors import LinearSegmentedColormap
+# import params 
+# import mantle
 
 
 ##############################
