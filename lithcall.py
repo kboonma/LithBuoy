@@ -9,30 +9,11 @@ Created 21/08/2019
 #=======================================================================#
 """
 
-# import sys
 import numpy as np
-# import matplotlib
-# import matplotlib.pyplot as plt
-# from mpl_toolkits.axes_grid1 import make_axes_locatable
-# import os
-# from pylab import rcParams
-# from copy import copy, deepcopy
-# import matplotlib.gridspec as gridspec
-# import pandas as pd
-# import math
-# import csv
-# import pickle
-# import matplotlib.ticker as tkr
-# #from Stokes2D import Stokes2Dfunc 
-# from matplotlib.colors import LinearSegmentedColormap
-# import params 
-# import mantle
-
 
 ##############################
 # INPUT PARAMETERS
 #############################
-
 
 experiment_number = params.experiment_number # for the .savefig title -- CHANGE to prevent overwriting
 velocity = params.velocity         # 4 20 40 60 80mm/year_
