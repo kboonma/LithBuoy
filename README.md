@@ -2,7 +2,7 @@
  A 2D thermally diffusion-advection Python code for study of the buoyancy of lithospheric mantle 
  
 #### Contents:  
- * **params.py**  - main script / runable / change basic paramters  
+ * **params.py**  - main script / **executable** / change basic paramters  
  * **lithbuoy.py** - sub-routines / time-stepping / calculations  
  * **mantle.py** - properties of each lithospheric mantle type
  * **sim_figs.py** - plot output (see an example below)
