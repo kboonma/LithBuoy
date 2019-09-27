@@ -597,17 +597,22 @@ for it in range(0, nt):
     # TOTAL EFFECTS
     T_diffus_diffus = diffuse(T_old,rho_old)
     T_diffus_new=imposeT(T_diffus_diffus,T_init)
+#    T_diffus_new= T_diffus_diffus.copy()
     rho_diffus_new_ = density_T(T_diffus_new,T_old,rho_old)
     rho_diffus_new = imposeT(rho_diffus_new_,rho_init)
+#    rho_diffus_new=rho_diffus_new_.copy()
     P_new_=get_pressure(rho_diffus_new)
     
     [T_adv_advected,rho_adv_advected,P_adv_advected] = advect(T_diffus_new,rho_diffus_new,P_new_)
     T_adv_new =imposeT(T_adv_advected,T_init) # 
+#    T_adv_new=T_adv_advected.copy()
     
     P_adv_old =imposeT(P_adv_advected,P_init)
+#    P_adv_old=P_adv_advected.copy()
     P_adv_new = get_pressure(rho_adv_advected)
     rho_adv_new_ = density_P(P_adv_new,P_adv_old,rho_adv_advected)
     rho_adv_new =imposeT(rho_adv_new_,rho_init)
+#    rho_adv_new=rho_adv_new_.copy()
 
     rho_new=rho_adv_new.copy()
     T_new =T_adv_new.copy()

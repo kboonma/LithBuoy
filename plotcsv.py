@@ -49,11 +49,15 @@ import params
 #rcParams['font.size'] = 14
 # rcParams['axes', linewidth=3]
 
-exp_name= params.experiment_number
-vel=[80]
+
+vel=[40]
 #____________0_________1_________2___________3____________4_________5_________6_______7______8_____
 mantle = ['Archon', 'Proton', 'Tecton', 'Ocean30ma','Ocean120ma','slab80','slab160','oc60','oc110']
-mantle_type = mantle[params.man_type] 
+mantle_type = mantle[1] #[mman] #'Ocean30ma'  # Type of mantle (Tecton, Archon,Proton)
+exp_name = 'TESTdiffus_kappa_e5' # for the .savefig title -- CHANGE to prevent overwriting
+
+kappa_lith = 1e-6
+kappa_asth = 1e-5
 #vel=[1,4,10,20,40,80]
 
 rho_contrast    =0
@@ -72,9 +76,9 @@ Tecton_FbouyShorten=0
 Effect_advA     =0
 Effect_advB     =0
 Effect_diffus  =0
-FtotShorten     =0
+FtotShorten     =10
 minFbuoy        =0
-InitTrho        =10
+InitTrho        =0
 ComponentsTime  =0
 FdiffusShortenVel =0
 FadvAShortenVel =0
@@ -189,11 +193,12 @@ FadvBShortenVel =0
 # exp_name='NEW_TEST'
 #
 fig_path = os.getcwd()+'/plots/'+exp_name
-csv_path= os.getcwd()+'/csv/%s_%s_vel%d/' % (params.experiment_number,mantle_type,params.velocity)
+csv_path= os.getcwd()+'/csv/' #%s_%s_vel%d/' % (params.experiment_number,mantle_type,params.velocity)
 dir = os.path.expanduser(fig_path)
 if not os.path.exists(dir):
      os.mkdir(dir)    
 
+os.chdir(csv_path)
 
 
 for i in range(len(vel)):
@@ -688,8 +693,8 @@ if (rho_contrast>0.):
     ax1.set_xlim(min(delrho),max(delrho))
     ax1.set_ylim(-8,0.5)
     
-    ax1.set_title("$\\bigtriangleup \\rho_{LAB}$ vs Minimum $F_{buoy}$ (within d=400km)", fontsize=20, fontweight='bold', loc='center',y=1.02)
-    ax1.set_xlabel('$\\bigtriangleup \\rho_{LAB} = \\rho_{asth} - \\rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold',y=-1.5)
+    ax1.set_title("$/bigtriangleup /rho_{LAB}$ vs Minimum $F_{buoy}$ (within d=400km)", fontsize=20, fontweight='bold', loc='center',y=1.02)
+    ax1.set_xlabel('$/bigtriangleup /rho_{LAB} = /rho_{asth} - /rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold',y=-1.5)
     ax1.set_ylabel('Slab pull / -F$_{bouy}$ ($10^{12}N/m$)',fontsize=20,fontweight='bold')
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
@@ -1114,7 +1119,7 @@ if (rho_contrast2>0.):
 #    ax2.set_ylim(0,15)
     
 #    ax1.set_title("$F_{buoy}$ = -3e12 $N/m$", fontsize=20, fontweight='bold', loc='center',y=1.02)
-    ax1.set_xlabel('$\\bigtriangleup \\rho_{LAB} = \\rho_{asth} - \\rho_{lith}$ ($kg m^{-3}$)',fontsize=20,fontweight='bold')
+    ax1.set_xlabel('$/bigtriangleup /rho_{LAB} = /rho_{asth} - /rho_{lith}$ ($kg m^{-3}$)',fontsize=20,fontweight='bold')
     ax1.set_ylabel('Time needed for $F_{b,ref}$ = -3 $TNm^{-1}$ ($Myr$)',fontsize=20,fontweight='bold')
 
     ax1.tick_params(direction='in',which='both',labelbottom=True, labeltop=False, labelleft=True, labelright=False,
@@ -1339,9 +1344,9 @@ if (rho_contrast3>0.):
     yyy1= 0.8693009 + (56839.67*np.exp(xxx[:]*-0.178609))  #160
     yyy2= 4.523505+(934.7117*np.exp(xxx[:]*-0.3739652))  # 80
     yyy3 = (yyy1*0)
-#    ax2.fill(xxx, yyy1, 'grey', alpha=1,zorder=2,hatch='\\')
-    ax2.fill(xxx, yyy1, 'grey', alpha=1,zorder=1,hatch='\\\\')
-    ax1.fill(xxx, yyy2, facecolor='grey', alpha=1,zorder=1,hatch='\\\\')
+#    ax2.fill(xxx, yyy1, 'grey', alpha=1,zorder=2,hatch='/')
+    ax2.fill(xxx, yyy1, 'grey', alpha=1,zorder=1,hatch='//')
+    ax1.fill(xxx, yyy2, facecolor='grey', alpha=1,zorder=1,hatch='//')
     
     ffont=16
     ax2.text(45,0.7,'v>80 mm/yr',fontsize=ffont)
@@ -1382,11 +1387,11 @@ if (rho_contrast3>0.):
 
     
     ax1.set_title("$F_{buoy}$ = -3e12 $N/m$, wihin d=400km", fontsize=20, fontweight='bold', loc='center',y=1.02)
-    ax1.set_xlabel('$\\bigtriangleup \\rho_{LAB} = \\rho_{asth} - \\rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold')
+    ax1.set_xlabel('$/bigtriangleup /rho_{LAB} = /rho_{asth} - /rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold')
     ax1.set_ylabel('log(Time) ($Myr$)',fontsize=20,fontweight='bold')
     
     ax2.set_title("$F_{buoy}$ = -3e12 $N/m$, wihin d=400km", fontsize=20, fontweight='bold', loc='center',y=1.02)
-    ax2.set_xlabel('$\\bigtriangleup \\rho_{LAB} = \\rho_{asth} - \\rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold')
+    ax2.set_xlabel('$/bigtriangleup /rho_{LAB} = /rho_{asth} - /rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold')
 
     ax1.tick_params(direction='in',which='both',labelbottom=True, labeltop=False, labelleft=True, labelright=False,
              bottom=True, top=True, left=True, right=True,zorder=9)
@@ -1513,7 +1518,7 @@ if(rho_contrast_rho>0.):
 #    ax2.text(3790, 68, r'70km',fontsize=19, color='xkcd:sienna')
 #    ax2.text(3720, 25, r'LAB depth',fontsize=19, color='k')
     
-    ax1.legend(title="$\\bigtriangleup \\rho_{LAB} (kg/m^3)$",loc='lower left', fontsize=15)
+    ax1.legend(title="$/bigtriangleup /rho_{LAB} (kg/m^3)$",loc='lower left', fontsize=15)
     ax1.get_legend().get_title().set_fontsize('15')
     
     ax2.text(3680,138, '120 km - LAB',fontsize=15, color='k')
@@ -1743,7 +1748,7 @@ if (Trho_evol >0.):
         ax2.plot(hline2,hline2*0+110e3,color = 'k',linestyle='--', linewidth=1,alpha=0.5)
     #    plt.gca().invert_yaxis()
         ax2.invert_yaxis()
-        ax2.text(3730,-10e3,'$\\rho$ - profile',fontsize=30)
+        ax2.text(3730,-10e3,'$/rho$ - profile',fontsize=30)
         ax2.legend(title="Time",loc='lower left', fontsize=23,fancybox=True, framealpha=0.3)
         ax2.get_legend().get_title().set_fontsize('23')
         ax2.grid(linestyle='dotted')
@@ -1797,18 +1802,18 @@ if (FbouyShorten>0.):
     
     
     for i in range(len(vel)):  
-        globals()['ax{}'.format(i+1)].plot(globals()['dfa{}'.format(i+1)]['shorten'], \
-                  globals()['dfa{}'.format(i+1)]['Ftot']/1e12, 'b',label="Archon", linewidth=3)
+#        globals()['ax{}'.format(i+1)].plot(globals()['dfa{}'.format(i+1)]['shorten'], \
+#                  globals()['dfa{}'.format(i+1)]['Ftot']/1e12, 'b',label="Archon", linewidth=3)
         globals()['ax{}'.format(i+1)].plot(globals()['dfp{}'.format(i+1)]['shorten'], \
                   globals()['dfp{}'.format(i+1)]['Ftot']/1e12, 'g',label="Proton", linewidth=3)
         globals()['ax{}'.format(i+1)].plot(globals()['dft{}'.format(i+1)]['shorten'], \
                   globals()['dft{}'.format(i+1)]['Ftot']/1e12, 'r',label="Tecton", linewidth=3)
-        globals()['ax{}'.format(i+1)].plot(globals()['dfoc1{}'.format(i+1)]['shorten'], \
-                  globals()['dfoc1{}'.format(i+1)]['Ftot']/1e12, 'c',label="OC30ma", linewidth=3)
-        globals()['ax{}'.format(i+1)].plot(globals()['dfoc2{}'.format(i+1)]['shorten'], \
-                  globals()['dfoc2{}'.format(i+1)]['Ftot']/1e12, 'm',label="OC120ma", linewidth=3)
-        globals()['ax{}'.format(i+1)].plot(globals()['dfoc2{}'.format(i+1)]['shorten'], \
-                  globals()['dfoc2{}'.format(i+1)]['Ftot']*0,'--k', label='_nolegend_', linewidth=3)
+#        globals()['ax{}'.format(i+1)].plot(globals()['dfoc1{}'.format(i+1)]['shorten'], \
+#                  globals()['dfoc1{}'.format(i+1)]['Ftot']/1e12, 'c',label="OC30ma", linewidth=3)
+#        globals()['ax{}'.format(i+1)].plot(globals()['dfoc2{}'.format(i+1)]['shorten'], \
+#                  globals()['dfoc2{}'.format(i+1)]['Ftot']/1e12, 'm',label="OC120ma", linewidth=3)
+#        globals()['ax{}'.format(i+1)].plot(globals()['dfoc2{}'.format(i+1)]['shorten'], \
+#                  globals()['dfoc2{}'.format(i+1)]['Ftot']*0,'--k', label='_nolegend_', linewidth=3)
         
         globals()['ax{}'.format(i+1)].set_xlim(0,600)
         globals()['ax{}'.format(i+1)].set_ylim(-10,10)
@@ -1974,7 +1979,7 @@ if(FbouyVels>0.):
     ax5.xaxis.set_major_formatter(ticker.ScalarFormatter())
     ax5.set_xlim(0,max(vel))
     ax5.legend(loc='center right', frameon=True,  fontsize=15)
-    ax5.set_xlabel('Convergence rate $ \\nu $ (mm/year)',fontsize=18,fontweight='bold')
+    ax5.set_xlabel('Convergence rate $ /nu $ (mm/year)',fontsize=18,fontweight='bold')
     ax5.set_ylabel('F$_{bouy}$ ($10^{12}N/m$)',fontsize=18,fontweight='bold')
     ax5.tick_params(direction='in',which='minor', length=7, color='k') 
     plt.setp(ax5.spines.values(), color='k', linewidth=1.5)
@@ -2649,33 +2654,33 @@ if(FtotShorten>0.):
         globals()['sp{}'.format(i+1)] = splrep(globals()['dfp{}'.format(i+1)]['shorten'], globals()['dfp{}'.format(i+1)]['Ftot'])
         globals()['yp{}'.format(i+1)] = splev(globals()['xp{}'.format(i+1)], globals()['sp{}'.format(i+1)])
         
-        globals()['ft{}'.format(i+1)] = interpolate.interp1d(globals()['dft{}'.format(i+1)]['shorten'], \
-                                  globals()['dft{}'.format(i+1)]['Ftot'], kind='cubic')
-        globals()['xt{}'.format(i+1)] = np.linspace(np.min(globals()['dft{}'.format(i+1)]['shorten']), \
-                  np.max(globals()['dft{}'.format(i+1)]['shorten']),100)
-        globals()['st{}'.format(i+1)] = splrep(globals()['dft{}'.format(i+1)]['shorten'], globals()['dft{}'.format(i+1)]['Ftot'])
-        globals()['yt{}'.format(i+1)] = splev(globals()['xt{}'.format(i+1)], globals()['st{}'.format(i+1)])
+#        globals()['ft{}'.format(i+1)] = interpolate.interp1d(globals()['dft{}'.format(i+1)]['shorten'], \
+#                                  globals()['dft{}'.format(i+1)]['Ftot'], kind='cubic')
+#        globals()['xt{}'.format(i+1)] = np.linspace(np.min(globals()['dft{}'.format(i+1)]['shorten']), \
+#                  np.max(globals()['dft{}'.format(i+1)]['shorten']),100)
+#        globals()['st{}'.format(i+1)] = splrep(globals()['dft{}'.format(i+1)]['shorten'], globals()['dft{}'.format(i+1)]['Ftot'])
+#        globals()['yt{}'.format(i+1)] = splev(globals()['xt{}'.format(i+1)], globals()['st{}'.format(i+1)])
         
-        globals()['fa{}'.format(i+1)] = interpolate.interp1d(globals()['dfa{}'.format(i+1)]['shorten'], \
-                                  globals()['dfa{}'.format(i+1)]['Ftot'], kind='cubic')
-        globals()['xa{}'.format(i+1)] = np.linspace(np.min(globals()['dfa{}'.format(i+1)]['shorten']), \
-                  np.max(globals()['dfa{}'.format(i+1)]['shorten']),100)
-        globals()['sa{}'.format(i+1)] = splrep(globals()['dfa{}'.format(i+1)]['shorten'], globals()['dfa{}'.format(i+1)]['Ftot'])
-        globals()['ya{}'.format(i+1)] = splev(globals()['xa{}'.format(i+1)], globals()['sa{}'.format(i+1)])
-        
-        globals()['foc1{}'.format(i+1)] = interpolate.interp1d(globals()['dfoc1{}'.format(i+1)]['shorten'], \
-                                  globals()['dfoc1{}'.format(i+1)]['Ftot'], kind='cubic')
-        globals()['xoc1{}'.format(i+1)] = np.linspace(np.min(globals()['dfoc1{}'.format(i+1)]['shorten']), \
-                  np.max(globals()['dfoc1{}'.format(i+1)]['shorten']),100)
-        globals()['soc1{}'.format(i+1)] = splrep(globals()['dfoc1{}'.format(i+1)]['shorten'], globals()['dfoc1{}'.format(i+1)]['Ftot'])
-        globals()['yoc1{}'.format(i+1)] = splev(globals()['xoc1{}'.format(i+1)], globals()['soc1{}'.format(i+1)])
-        
-        globals()['foc2{}'.format(i+1)] = interpolate.interp1d(globals()['dfoc2{}'.format(i+1)]['shorten'], \
-                                  globals()['dfoc2{}'.format(i+1)]['Ftot'], kind='cubic')
-        globals()['xoc2{}'.format(i+1)] = np.linspace(np.min(globals()['dfoc2{}'.format(i+1)]['shorten']), \
-                  np.max(globals()['dfoc2{}'.format(i+1)]['shorten']),100)
-        globals()['soc2{}'.format(i+1)] = splrep(globals()['dfoc2{}'.format(i+1)]['shorten'], globals()['dfoc2{}'.format(i+1)]['Ftot'])
-        globals()['yoc2{}'.format(i+1)] = splev(globals()['xoc2{}'.format(i+1)], globals()['soc2{}'.format(i+1)])
+#        globals()['fa{}'.format(i+1)] = interpolate.interp1d(globals()['dfa{}'.format(i+1)]['shorten'], \
+#                                  globals()['dfa{}'.format(i+1)]['Ftot'], kind='cubic')
+#        globals()['xa{}'.format(i+1)] = np.linspace(np.min(globals()['dfa{}'.format(i+1)]['shorten']), \
+#                  np.max(globals()['dfa{}'.format(i+1)]['shorten']),100)
+#        globals()['sa{}'.format(i+1)] = splrep(globals()['dfa{}'.format(i+1)]['shorten'], globals()['dfa{}'.format(i+1)]['Ftot'])
+#        globals()['ya{}'.format(i+1)] = splev(globals()['xa{}'.format(i+1)], globals()['sa{}'.format(i+1)])
+#        
+#        globals()['foc1{}'.format(i+1)] = interpolate.interp1d(globals()['dfoc1{}'.format(i+1)]['shorten'], \
+#                                  globals()['dfoc1{}'.format(i+1)]['Ftot'], kind='cubic')
+#        globals()['xoc1{}'.format(i+1)] = np.linspace(np.min(globals()['dfoc1{}'.format(i+1)]['shorten']), \
+#                  np.max(globals()['dfoc1{}'.format(i+1)]['shorten']),100)
+#        globals()['soc1{}'.format(i+1)] = splrep(globals()['dfoc1{}'.format(i+1)]['shorten'], globals()['dfoc1{}'.format(i+1)]['Ftot'])
+#        globals()['yoc1{}'.format(i+1)] = splev(globals()['xoc1{}'.format(i+1)], globals()['soc1{}'.format(i+1)])
+#        
+#        globals()['foc2{}'.format(i+1)] = interpolate.interp1d(globals()['dfoc2{}'.format(i+1)]['shorten'], \
+#                                  globals()['dfoc2{}'.format(i+1)]['Ftot'], kind='cubic')
+#        globals()['xoc2{}'.format(i+1)] = np.linspace(np.min(globals()['dfoc2{}'.format(i+1)]['shorten']), \
+#                  np.max(globals()['dfoc2{}'.format(i+1)]['shorten']),100)
+#        globals()['soc2{}'.format(i+1)] = splrep(globals()['dfoc2{}'.format(i+1)]['shorten'], globals()['dfoc2{}'.format(i+1)]['Ftot'])
+#        globals()['yoc2{}'.format(i+1)] = splev(globals()['xoc2{}'.format(i+1)], globals()['soc2{}'.format(i+1)])
 
 
 #    ax1.plot(xa1,ya1/1e12, color=plt.cm.copper_r(0*40), label=str(vel[0]), linewidth=2)
@@ -2690,22 +2695,22 @@ if(FtotShorten>0.):
 #        spl = make_interp_spline(globals()['xa{}'.format(i+1)], globals()['ya{}'.format(i+1)]/1e12, k=5) 
 #        power_smooth = spl(xnew)
 #        ax1.plot(xnew,power_smooth, color=plt.cm.copper_r(i*40), label=str(vel[i]), linewidth=2)
-        ax1.plot(globals()['xa{}'.format(i+1)],globals()['ya{}'.format(i+1)]/1e12 , \
-                 color=plt.cm.copper_r(i*40), label=str(vel[i]), linewidth=2)
+#        ax1.plot(globals()['xa{}'.format(i+1)],globals()['ya{}'.format(i+1)]/1e12 , \
+#                 color=plt.cm.copper_r(i*40), label=str(vel[i]), linewidth=2)
         ax2.plot(globals()['xp{}'.format(i+1)],globals()['yp{}'.format(i+1)]/1e12 , \
-                 color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
-        ax3.plot(globals()['xt{}'.format(i+1)],globals()['yt{}'.format(i+1)]/1e12 , \
-                color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
-        ax4.plot(globals()['xoc1{}'.format(i+1)],globals()['yoc1{}'.format(i+1)]/1e12 , \
-                 '--', color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
-        ax4.plot(globals()['xoc2{}'.format(i+1)],globals()['yoc2{}'.format(i+1)]/1e12 , \
-                 color=plt.cm.copper_r(i*40), linewidth=2)
-    
+                 color=plt.cm.copper_r(i*40), label=str(vel[i]), linewidth=2)
+#        ax3.plot(globals()['xt{}'.format(i+1)],globals()['yt{}'.format(i+1)]/1e12 , \
+#                color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
+#        ax4.plot(globals()['xoc1{}'.format(i+1)],globals()['yoc1{}'.format(i+1)]/1e12 , \
+#                 '--', color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
+#        ax4.plot(globals()['xoc2{}'.format(i+1)],globals()['yoc2{}'.format(i+1)]/1e12 , \
+#                 color=plt.cm.copper_r(i*40), linewidth=2)
+#    
 
                  
     for i in range(4):   
-        globals()['ax{}'.format(i+1)].plot(np.linspace(0,600,len(globals()['dfa{}'.format(i+1)])), \
-                  globals()['dfa{}'.format(i+1)]['time']*0,color="0.5", label='_nolegend_', linewidth=1)  
+        globals()['ax{}'.format(i+1)].plot(np.linspace(0,600,len(globals()['dfp{}'.format(i+1)])), \
+                  globals()['dfp{}'.format(i+1)]['time']*0,color="0.5", label='_nolegend_', linewidth=1)  
         globals()['ax{}'.format(i+1)].set_xlim(0,lim)
 #        globals()['ax{}'.format(i+1)].set_ylim(-8,8)
 #        sns.despine(right=True,top=True)
@@ -2769,8 +2774,8 @@ if(FtotShorten>0.):
     ax4.tick_params(which='major', length=12,width=1)
     ax4.tick_params(which='minor', length=5)
     
-    ax1.legend(title="v ($mm$$yr^{-1}$)",ncol=2,columnspacing=0.1,labelspacing=0.3,loc='lower right', fontsize=16,frameon=True)
-    ax1.get_legend().get_title().set_fontsize('17')
+    ax2.legend(title="v ($mm$$yr^{-1}$)",ncol=2,columnspacing=0.1,labelspacing=0.3,loc='lower right', fontsize=16,frameon=True)
+    ax2.get_legend().get_title().set_fontsize('17')
 
     ax4.set_xlabel('Shortening ($km$)',fontsize=lab_size, fontweight='bold')
     ax3.set_xlabel('Shortening ($km$)',fontsize=lab_size, fontweight='bold')

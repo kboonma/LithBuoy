@@ -10,6 +10,9 @@ Created 21/08/2019
 """
 
 import numpy as np
+import params
+import mantle
+import os
 
 ##############################
 # INPUT PARAMETERS
@@ -108,16 +111,16 @@ quiv_skip = 2  # velocity vector arrows spacing
 
 
 ## PATH to files
-fig_path= os.getcwd()+'/data/%s_%s_vel%d/subplots/' % (experiment_number,mantle_type,velocity)
-csv_path= os.getcwd()+'/data/%s_%s_vel%d/' % (experiment_number,mantle_type,velocity)
-#fig_path="~/gpfs/scratch/csic08/csic08208/delam_savefig/%s_%s_vel%d/" % (experiment_number,mantle_type,velocity)
-#fig_path = os.getcwd()+"/delam_savefig/%s_%s_vel%d/" % (mantle_type, experiment_number,velocity)
-dir1 = os.path.expanduser(fig_path)
-dir2 = os.path.expanduser(csv_path)
-if not os.path.exists(dir1):
-    os.makedirs(dir1)
-if not os.path.exists(dir2):
-    os.makedirs(dir2)
+#fig_path= os.getcwd()+'/data/%s_%s_vel%d/subplots/' % (experiment_number,mantle_type,velocity)
+#csv_path= os.getcwd()+'/data/%s_%s_vel%d/' % (experiment_number,mantle_type,velocity)
+##fig_path="~/gpfs/scratch/csic08/csic08208/delam_savefig/%s_%s_vel%d/" % (experiment_number,mantle_type,velocity)
+##fig_path = os.getcwd()+"/delam_savefig/%s_%s_vel%d/" % (mantle_type, experiment_number,velocity)
+#dir1 = os.path.expanduser(fig_path)
+#dir2 = os.path.expanduser(csv_path)
+#if not os.path.exists(dir1):
+#    os.makedirs(dir1)
+#if not os.path.exists(dir2):
+#    os.makedirs(dir2)
 ##
 #########################################################################
 # Initialisation and setting up

@@ -23,7 +23,7 @@ if (mantle_type=='oc60'): #slab+thickness
     dlab = 70e3  # m  
     dmoho=10e3
     Tlab = 1300     # [ºC]
-    Tmoho = 200     # [ºC]
+    Tmoho = 350     # [ºC]
     Tbottom = 1500  # [ºC]
     ref_depth_lith = 33e3  # [m]
     ref_rho_lith = 3252.6  # [kg/m^3]
@@ -45,7 +45,7 @@ if (mantle_type=='oc110'):
     dlab = 110e3  # m  
     dmoho=10e3
     Tlab = 1300     # [ºC]
-    Tmoho = 200     # [ºC]
+    Tmoho = 350     # [ºC]
     Tbottom = 1500  # [ºC]
     ref_depth_lith = 33e3  # [m]
     ref_rho_lith = 3306.9  # [kg/m^3]
@@ -67,7 +67,7 @@ if (mantle_type=='slab80'): #slab+thickness
     dlab = 120e3#200e3  # m  
     dmoho=40e3
     Tlab = 1300     # [ºC]
-    Tmoho = 500     # [ºC]
+    Tmoho = 650     # [ºC]
     ref_depth_lith = 130e3  # [m]
     ref_rho_lith = 3300.  # [kg/m^3]
     ref_P_lith = 37040  # [bar]
@@ -88,7 +88,7 @@ if (mantle_type=='slab160'): #slab+thickness
     dlab = 200e3#200e3  # m  
     dmoho=40e3
     Tlab = 1300     # [ºC]
-    Tmoho = 500     # [ºC]
+    Tmoho = 650     # [ºC]
     ref_depth_lith = 130e3  # [m]
     ref_rho_lith = 3300.  # [kg/m^3]
     ref_P_lith = 37040  # [bar]
@@ -111,7 +111,7 @@ if (mantle_type=='Archon'):
     dlab = 200e3#200e3  # m  
     dmoho=40e3
     Tlab = 1300     # [ºC]
-    Tmoho = 500     # [ºC]
+    Tmoho = 650     # [ºC]
     Tbottom = 1500  # [ºC]
 #     temp_dummy1 = np.loadtxt('temp_Archon.dat')
 #    dense_dummy1 = np.loadtxt('dens_Archon_lab_200km.dat')  # load Archon rho_dist
@@ -139,7 +139,7 @@ if (mantle_type=='Tecton'):
     dlab = 120e3  # m  
     dmoho=40e3
     Tlab = 1300     # [ºC]
-    Tmoho = 500     # [ºC]
+    Tmoho = 650     # [ºC]
     Tbottom = 1500  # [ºC]
     # load Archon temp distribution
 #     temp_dummy1 = np.loadtxt('temp_Tecton.dat')
@@ -166,7 +166,7 @@ if (mantle_type=='Proton'):
     dlab = 150e3  # m  
     dmoho=40e3   
     Tlab = 1300     # [ºC]
-    Tmoho = 500     # [ºC]
+    Tmoho = 650     # [ºC]
     Tbottom = 1500  # [ºC]
 #     temp_dummy1 = np.loadtxt('temp_Proton.dat')
 #    dense_dummy1 = np.loadtxt('dens_Proton_lab_150km.dat')  # load Archon rho_dist
@@ -193,7 +193,7 @@ if (mantle_type=='Ocean30ma'):
     dlab = 70e3  # m  
     dmoho=10e3
     Tlab = 1300     # [ºC]
-    Tmoho = 200     # [ºC]
+    Tmoho = 350     # [ºC]
     Tbottom = 1500  # [ºC]
     ref_depth_lith = 33e3  # [m]
     ref_rho_lith = 3252.6  # [kg/m^3]
@@ -215,7 +215,7 @@ if (mantle_type=='Ocean120ma'):
     dlab = 110e3  # m  
     dmoho=10e3
     Tlab = 1300     # [ºC]
-    Tmoho = 200     # [ºC]
+    Tmoho = 350     # [ºC]
     Tbottom = 1500  # [ºC]
     ref_depth_lith = 33e3  # [m]
     ref_rho_lith = 3306.9  # [kg/m^3]

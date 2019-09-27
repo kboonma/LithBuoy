@@ -24,11 +24,11 @@ Created 21/08/2019
 8--Oceanic 110 km thick
 -----------------------
 """
-man_type=1
+man_type=0
 ############################################
-experiment_number = 'supertest' # for the .savefig title -- CHANGE to prevent overwriting
-velocity = 80  # mm/year
-nt = 51     # nº of steps to run
+experiment_number = 'manu2' # for the .savefig title -- CHANGE to prevent overwriting
+velocity = 40  # mm/year
+nt = 50001     # nº of steps to run
 save_interval = 10     # save every n step
 save_figure = True # True or False
 plot_im_subplots = True
