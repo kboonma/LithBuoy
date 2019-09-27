@@ -31,7 +31,7 @@ velocity = 40  # mm/year
 nt = 50001     # nº of steps to run
 save_interval = 10     # save every n step
 save_figure = True # True or False
-plot_im_subplots = True
+plot_im_subplots = False
 plot_check = False 
 ############################################
 
