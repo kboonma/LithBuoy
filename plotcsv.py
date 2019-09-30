@@ -36,7 +36,7 @@ from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
 import matplotlib.patheffects as PathEffects
 from scipy.interpolate import make_interp_spline, BSpline
-import params
+#import params
 
 #matplotlib.rc('text', usetex=True)
 #matplotlib.rcParams['text.latex.preamble'] = [r'\boldmath']
@@ -50,11 +50,11 @@ import params
 # rcParams['axes', linewidth=3]
 
 
-vel=[40]
+vel=[1,4,10,20,40,80]
 #____________0_________1_________2___________3____________4_________5_________6_______7______8_____
 mantle = ['Archon', 'Proton', 'Tecton', 'Ocean30ma','Ocean120ma','slab80','slab160','oc60','oc110']
 mantle_type = mantle[1] #[mman] #'Ocean30ma'  # Type of mantle (Tecton, Archon,Proton)
-exp_name = 'TESTdiffus_kappa_e5' # for the .savefig title -- CHANGE to prevent overwriting
+exp_name = 'manu2' # for the .savefig title -- CHANGE to prevent overwriting
 
 kappa_lith = 1e-6
 kappa_asth = 1e-5
@@ -192,11 +192,16 @@ FadvBShortenVel =0
 # vel=[5,15,30]
 # exp_name='NEW_TEST'
 #
-fig_path = os.getcwd()+'/plots/'+exp_name
+fig_path0 = os.getcwd()+'/plots/'
+fig_path1 = os.getcwd()+'/plots/'+exp_name
 csv_path= os.getcwd()+'/csv/' #%s_%s_vel%d/' % (params.experiment_number,mantle_type,params.velocity)
-dir = os.path.expanduser(fig_path)
+dir = os.path.expanduser(fig_path0)
 if not os.path.exists(dir):
-     os.mkdir(dir)    
+    os.mkdir(dir)  
+    
+dir =os.path.expanduser(fig_path1)    
+if not os.path.exists(dir):
+    os.mkdir(dir)     
 
 os.chdir(csv_path)
 
@@ -2654,33 +2659,33 @@ if(FtotShorten>0.):
         globals()['sp{}'.format(i+1)] = splrep(globals()['dfp{}'.format(i+1)]['shorten'], globals()['dfp{}'.format(i+1)]['Ftot'])
         globals()['yp{}'.format(i+1)] = splev(globals()['xp{}'.format(i+1)], globals()['sp{}'.format(i+1)])
         
-#        globals()['ft{}'.format(i+1)] = interpolate.interp1d(globals()['dft{}'.format(i+1)]['shorten'], \
-#                                  globals()['dft{}'.format(i+1)]['Ftot'], kind='cubic')
-#        globals()['xt{}'.format(i+1)] = np.linspace(np.min(globals()['dft{}'.format(i+1)]['shorten']), \
-#                  np.max(globals()['dft{}'.format(i+1)]['shorten']),100)
-#        globals()['st{}'.format(i+1)] = splrep(globals()['dft{}'.format(i+1)]['shorten'], globals()['dft{}'.format(i+1)]['Ftot'])
-#        globals()['yt{}'.format(i+1)] = splev(globals()['xt{}'.format(i+1)], globals()['st{}'.format(i+1)])
+        globals()['ft{}'.format(i+1)] = interpolate.interp1d(globals()['dft{}'.format(i+1)]['shorten'], \
+                                  globals()['dft{}'.format(i+1)]['Ftot'], kind='cubic')
+        globals()['xt{}'.format(i+1)] = np.linspace(np.min(globals()['dft{}'.format(i+1)]['shorten']), \
+                  np.max(globals()['dft{}'.format(i+1)]['shorten']),100)
+        globals()['st{}'.format(i+1)] = splrep(globals()['dft{}'.format(i+1)]['shorten'], globals()['dft{}'.format(i+1)]['Ftot'])
+        globals()['yt{}'.format(i+1)] = splev(globals()['xt{}'.format(i+1)], globals()['st{}'.format(i+1)])
         
-#        globals()['fa{}'.format(i+1)] = interpolate.interp1d(globals()['dfa{}'.format(i+1)]['shorten'], \
-#                                  globals()['dfa{}'.format(i+1)]['Ftot'], kind='cubic')
-#        globals()['xa{}'.format(i+1)] = np.linspace(np.min(globals()['dfa{}'.format(i+1)]['shorten']), \
-#                  np.max(globals()['dfa{}'.format(i+1)]['shorten']),100)
-#        globals()['sa{}'.format(i+1)] = splrep(globals()['dfa{}'.format(i+1)]['shorten'], globals()['dfa{}'.format(i+1)]['Ftot'])
-#        globals()['ya{}'.format(i+1)] = splev(globals()['xa{}'.format(i+1)], globals()['sa{}'.format(i+1)])
-#        
-#        globals()['foc1{}'.format(i+1)] = interpolate.interp1d(globals()['dfoc1{}'.format(i+1)]['shorten'], \
-#                                  globals()['dfoc1{}'.format(i+1)]['Ftot'], kind='cubic')
-#        globals()['xoc1{}'.format(i+1)] = np.linspace(np.min(globals()['dfoc1{}'.format(i+1)]['shorten']), \
-#                  np.max(globals()['dfoc1{}'.format(i+1)]['shorten']),100)
-#        globals()['soc1{}'.format(i+1)] = splrep(globals()['dfoc1{}'.format(i+1)]['shorten'], globals()['dfoc1{}'.format(i+1)]['Ftot'])
-#        globals()['yoc1{}'.format(i+1)] = splev(globals()['xoc1{}'.format(i+1)], globals()['soc1{}'.format(i+1)])
-#        
-#        globals()['foc2{}'.format(i+1)] = interpolate.interp1d(globals()['dfoc2{}'.format(i+1)]['shorten'], \
-#                                  globals()['dfoc2{}'.format(i+1)]['Ftot'], kind='cubic')
-#        globals()['xoc2{}'.format(i+1)] = np.linspace(np.min(globals()['dfoc2{}'.format(i+1)]['shorten']), \
-#                  np.max(globals()['dfoc2{}'.format(i+1)]['shorten']),100)
-#        globals()['soc2{}'.format(i+1)] = splrep(globals()['dfoc2{}'.format(i+1)]['shorten'], globals()['dfoc2{}'.format(i+1)]['Ftot'])
-#        globals()['yoc2{}'.format(i+1)] = splev(globals()['xoc2{}'.format(i+1)], globals()['soc2{}'.format(i+1)])
+        globals()['fa{}'.format(i+1)] = interpolate.interp1d(globals()['dfa{}'.format(i+1)]['shorten'], \
+                                  globals()['dfa{}'.format(i+1)]['Ftot'], kind='cubic')
+        globals()['xa{}'.format(i+1)] = np.linspace(np.min(globals()['dfa{}'.format(i+1)]['shorten']), \
+                  np.max(globals()['dfa{}'.format(i+1)]['shorten']),100)
+        globals()['sa{}'.format(i+1)] = splrep(globals()['dfa{}'.format(i+1)]['shorten'], globals()['dfa{}'.format(i+1)]['Ftot'])
+        globals()['ya{}'.format(i+1)] = splev(globals()['xa{}'.format(i+1)], globals()['sa{}'.format(i+1)])
+        
+        globals()['foc1{}'.format(i+1)] = interpolate.interp1d(globals()['dfoc1{}'.format(i+1)]['shorten'], \
+                                  globals()['dfoc1{}'.format(i+1)]['Ftot'], kind='cubic')
+        globals()['xoc1{}'.format(i+1)] = np.linspace(np.min(globals()['dfoc1{}'.format(i+1)]['shorten']), \
+                  np.max(globals()['dfoc1{}'.format(i+1)]['shorten']),100)
+        globals()['soc1{}'.format(i+1)] = splrep(globals()['dfoc1{}'.format(i+1)]['shorten'], globals()['dfoc1{}'.format(i+1)]['Ftot'])
+        globals()['yoc1{}'.format(i+1)] = splev(globals()['xoc1{}'.format(i+1)], globals()['soc1{}'.format(i+1)])
+        
+        globals()['foc2{}'.format(i+1)] = interpolate.interp1d(globals()['dfoc2{}'.format(i+1)]['shorten'], \
+                                  globals()['dfoc2{}'.format(i+1)]['Ftot'], kind='cubic')
+        globals()['xoc2{}'.format(i+1)] = np.linspace(np.min(globals()['dfoc2{}'.format(i+1)]['shorten']), \
+                  np.max(globals()['dfoc2{}'.format(i+1)]['shorten']),100)
+        globals()['soc2{}'.format(i+1)] = splrep(globals()['dfoc2{}'.format(i+1)]['shorten'], globals()['dfoc2{}'.format(i+1)]['Ftot'])
+        globals()['yoc2{}'.format(i+1)] = splev(globals()['xoc2{}'.format(i+1)], globals()['soc2{}'.format(i+1)])
 
 
 #    ax1.plot(xa1,ya1/1e12, color=plt.cm.copper_r(0*40), label=str(vel[0]), linewidth=2)
@@ -2695,16 +2700,16 @@ if(FtotShorten>0.):
 #        spl = make_interp_spline(globals()['xa{}'.format(i+1)], globals()['ya{}'.format(i+1)]/1e12, k=5) 
 #        power_smooth = spl(xnew)
 #        ax1.plot(xnew,power_smooth, color=plt.cm.copper_r(i*40), label=str(vel[i]), linewidth=2)
-#        ax1.plot(globals()['xa{}'.format(i+1)],globals()['ya{}'.format(i+1)]/1e12 , \
-#                 color=plt.cm.copper_r(i*40), label=str(vel[i]), linewidth=2)
-        ax2.plot(globals()['xp{}'.format(i+1)],globals()['yp{}'.format(i+1)]/1e12 , \
+        ax1.plot(globals()['xa{}'.format(i+1)],globals()['ya{}'.format(i+1)]/1e12 , \
                  color=plt.cm.copper_r(i*40), label=str(vel[i]), linewidth=2)
-#        ax3.plot(globals()['xt{}'.format(i+1)],globals()['yt{}'.format(i+1)]/1e12 , \
-#                color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
-#        ax4.plot(globals()['xoc1{}'.format(i+1)],globals()['yoc1{}'.format(i+1)]/1e12 , \
-#                 '--', color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
-#        ax4.plot(globals()['xoc2{}'.format(i+1)],globals()['yoc2{}'.format(i+1)]/1e12 , \
-#                 color=plt.cm.copper_r(i*40), linewidth=2)
+        ax2.plot(globals()['xp{}'.format(i+1)],globals()['yp{}'.format(i+1)]/1e12 , \
+                 color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
+        ax3.plot(globals()['xt{}'.format(i+1)],globals()['yt{}'.format(i+1)]/1e12 , \
+                color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
+        ax4.plot(globals()['xoc1{}'.format(i+1)],globals()['yoc1{}'.format(i+1)]/1e12 , \
+                 '--', color=plt.cm.copper_r(i*40), label='_nolegend_', linewidth=2)
+        ax4.plot(globals()['xoc2{}'.format(i+1)],globals()['yoc2{}'.format(i+1)]/1e12 , \
+                 color=plt.cm.copper_r(i*40), linewidth=2)
 #    
 
                  
@@ -2774,8 +2779,8 @@ if(FtotShorten>0.):
     ax4.tick_params(which='major', length=12,width=1)
     ax4.tick_params(which='minor', length=5)
     
-    ax2.legend(title="v ($mm$$yr^{-1}$)",ncol=2,columnspacing=0.1,labelspacing=0.3,loc='lower right', fontsize=16,frameon=True)
-    ax2.get_legend().get_title().set_fontsize('17')
+    ax1.legend(title="v ($mm$$yr^{-1}$)",ncol=2,columnspacing=0.1,labelspacing=0.3,loc='lower right', fontsize=16,frameon=True)
+    ax1.get_legend().get_title().set_fontsize('17')
 
     ax4.set_xlabel('Shortening ($km$)',fontsize=lab_size, fontweight='bold')
     ax3.set_xlabel('Shortening ($km$)',fontsize=lab_size, fontweight='bold')

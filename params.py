@@ -34,13 +34,15 @@ mman = np.int(sys.argv[1])
 velocity = np.int(sys.argv[2])
 rr=np.int(sys.argv[3]) # prints var1)
 
+delrho=np.arange(0,82,2)
+
 
 man_type=mman
 ############################################
-experiment_number = 'looptest'#'manu2' # for the .savefig title -- CHANGE to prevent overwriting
+experiment_number = 'delRho'+str(delrho[rr]) #'manu2' # for the .savefig title -- CHANGE to prevent overwriting
 # velocity = 40  # mm/year
-nt = 1     # nº of steps to run
-save_interval = 10     # save every n step
+nt = 50001     # nº of steps to run
+save_interval = 100000     # save every n step
 save_figure = True # True or False
 plot_im_subplots = False
 plot_check = False 
