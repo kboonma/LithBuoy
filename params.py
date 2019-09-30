@@ -9,7 +9,8 @@ params.py
 Created 21/08/2019                                               
 #=======================================================================#
 """
-
+import numpy as np
+import sys
 """
 -----------------------
 0--Archon
@@ -24,11 +25,21 @@ Created 21/08/2019
 8--Oceanic 110 km thick
 -----------------------
 """
-man_type=0
+
+"""
+For sequential run, BASH Script
+Testing del_rho 
+"""
+mman = np.int(sys.argv[1])
+velocity = np.int(sys.argv[2])
+rr=np.int(sys.argv[3]) # prints var1)
+
+
+man_type=mman
 ############################################
-experiment_number = 'manu2' # for the .savefig title -- CHANGE to prevent overwriting
-velocity = 40  # mm/year
-nt = 50001     # nº of steps to run
+experiment_number = 'looptest'#'manu2' # for the .savefig title -- CHANGE to prevent overwriting
+# velocity = 40  # mm/year
+nt = 1     # nº of steps to run
 save_interval = 10     # save every n step
 save_figure = True # True or False
 plot_im_subplots = False

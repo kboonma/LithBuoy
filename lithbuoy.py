@@ -82,7 +82,7 @@ kappa_lith = params.kappa_lith
 kappa_asth = params.kappa_asth
 #============================================================================
 ## Mantle parameters from mantly.py
-mantle_type=mantle.mantle_type
+mantle_type=mantle.mantle_type #[mman]
 dlab=mantle.dlab 
 dmoho=mantle.dmoho
 Tlab=mantle.Tlab
