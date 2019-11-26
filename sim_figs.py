@@ -33,8 +33,11 @@ import params
 from matplotlib.colors import LinearSegmentedColormap
 import lithcall as lc
 import os
-
-
+rcParams['font.family'] = 'sans-serif'
+rcParams['font.sans-serif'] = ['Helvetica']
+plt.rcParams['mathtext.rm'] = 'serif'
+paramss = {'text.usetex': False, 'mathtext.fontset': 'stixsans'}
+plt.rcParams.update(paramss)
 #from LithBuoy import * 
 #plt.rcParams["font.family"] = "Times New Roman"
 #plt.rcParams['mathtext.fontset'] = u'cm'
@@ -47,23 +50,24 @@ CBdens_map = LinearSegmentedColormap.from_list('CBdens', dens_data[::-1])
 
 rcParams['figure.figsize'] = (15, 8)
 rcParams['font.size'] = 8
+rcParams['axes.linewidth'] = 1
 
 
 
 #____________0_________1_________2___________3____________4_________5_________6_______7______8_____
 mantle = ['Archon', 'Proton', 'Tecton', 'Ocean30ma','Ocean120ma','slab80','slab160','oc60','oc110']
 mantle_type = mantle[1] #[mman] #'Ocean30ma'  # Type of mantle (Tecton, Archon,Proton)
-experiment_number = 'TESTkappa_e6' # for the .savefig title -- CHANGE to prevent overwriting
-velocity = 20  # mm/year
+experiment_number = 'manu2' # for the .savefig title -- CHANGE to prevent overwriting
+velocity = 40  # mm/year
 kappa_lith = 1e-6
-kappa_asth = 1e-6
+kappa_asth = 1e-5
 
 #fnum=[1,11,21,31,41,51,61,71,81,91,101] #[2001]
 
-fnum=[2111]
+fnum=[841]
 
-plot_panels=0
-plot_kappa=10
+plot_panels=10
+plot_kappa=0
 
 
 
@@ -98,8 +102,8 @@ for i in fnum:
     tmyrs=data[14]
     xs=data[15]
     ys=data[16]
-    T_diffus_diffus=data[17]
-    T_diffus_new=data[18]
+#    T_diffus_diffus=data[17]
+#    T_diffus_new=data[18]
     
     shorten= (velocity * 1e-3 / (365 * 24 * 3600)) * (tmyrs*lc.secinmyr) / 1e3
     
