@@ -58,7 +58,7 @@ if (mantle_type=='oc60'): #slab+thickness
     dlab = 70e3  # m  
     dmoho=10e3
     Tlab = 1300     # [ºC]
-    Tmoho = 350     # [ºC]
+    Tmoho = 300     # [ºC]
     Tbottom = 1500  # [ºC]
     ref_depth_lith = 33e3  # [m]
     ref_rho_lith = 3252.6  # [kg/m^3]
@@ -69,7 +69,7 @@ if (mantle_type=='oc60'): #slab+thickness
     dT_lith = 22.12 / 1000
     ##Tecton asthenos. references##
     ref_depth_asth = 95e3 # [m]
-    ref_rho_asth = RefRho[params.params.rr]#3296  # [kg/m^3]
+    ref_rho_asth = RefRho[params.rr]#3296  # [kg/m^3]
     dT_asth = 0.0005
     ref_P_asth = 30763 #51909 
     ref_T_asth = 1384.7
@@ -80,7 +80,7 @@ if (mantle_type=='oc110'):
     dlab = 110e3  # m  
     dmoho=10e3
     Tlab = 1300     # [ºC]
-    Tmoho = 350     # [ºC]
+    Tmoho = 300     # [ºC]
     Tbottom = 1500  # [ºC]
     ref_depth_lith = 33e3  # [m]
     ref_rho_lith = 3306.9  # [kg/m^3]
@@ -231,7 +231,7 @@ if (mantle_type=='Ocean30ma'):
     dlab = 70e3  # m  
     dmoho=10e3
     Tlab = 1300     # [ºC]
-    Tmoho = 350     # [ºC]
+    Tmoho = 300     # [ºC]
     Tbottom = 1500  # [ºC]
     ref_depth_lith = 33e3  # [m]
     ref_rho_lith = 3252.6  # [kg/m^3]
@@ -253,21 +253,21 @@ if (mantle_type=='Ocean120ma'):
     dlab = 110e3  # m  
     dmoho=10e3
     Tlab = 1300     # [ºC]
-    Tmoho = 350     # [ºC]
+    Tmoho = 300     # [ºC]
     Tbottom = 1500  # [ºC]
-    ref_depth_lith = 33e3  # [m]
-    ref_rho_lith = 3306.9  # [kg/m^3]
-    ref_P_lith = 10802 # 46541  # [bar]
-    ref_T_lith = 623.4472
+    ref_depth_lith = 95e3 #104e3  # 33e3  # [m]
+    ref_rho_lith = 3313.6 #3311.8  #3306.9  # [kg/m^3]
+    ref_P_lith = 30927#34001 # 10802 # 46541  # [bar]
+    ref_T_lith = 1120.1 #1215.9 #623.4472
     drhodT_lith = -0.1236
     drhodP_lith = 0.0046
     dT_lith = 9.47 / 1000
     ##Tecton asthenos. references##
-    ref_depth_asth = 104.762e3 # [m]
-    ref_rho_asth = 3313  #RefRho[params.rr] # [kg/m^3]
+    ref_depth_asth = 119.05e3 #104.762e3 # [m]
+    ref_rho_asth = 3334.9 #3313  #RefRho[params.rr] # [kg/m^3]
     dT_asth = 0.0005
-    ref_P_asth = 34014 #51909 
-    ref_T_asth = 1358.7
+    ref_P_asth = 38907 #34014 #51909 
+    ref_T_asth = 1328.5 #1358.7
     drhodT_asth = -0.1165
     drhodP_asth = 0.0044
 

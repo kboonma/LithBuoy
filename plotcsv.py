@@ -16,8 +16,10 @@ from scipy.interpolate import splev, splrep
 import matplotlib.ticker as ticker
 import matplotlib.gridspec as gridspec
 from matplotlib.font_manager import FontProperties
-plt.rcParams["font.family"] = "Times New Roman"
-plt.rcParams['mathtext.fontset'] = u'cm'
+rcParams['font.family'] = 'sans-serif'
+rcParams['font.sans-serif'] = ['Helvetica']
+#plt.rcParams['mathtext.fontset'] = u'cm'
+plt.rcParams['mathtext.rm'] = 'serif'
 rcParams['axes.linewidth'] = 1.5 #set the value globally
 #plt.rcParams['axes.grid'] = True
 from matplotlib.ticker import LinearLocator
@@ -28,7 +30,7 @@ import math
 import errno
 import warnings
 warnings.simplefilter('ignore', np.RankWarning)
-from mpl_toolkits.axes_grid.inset_locator import inset_axes
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.lines as mlines
 import numpy.polynomial.polynomial as pol
@@ -37,17 +39,23 @@ from matplotlib.colors import ListedColormap, BoundaryNorm
 import matplotlib.patheffects as PathEffects
 from scipy.interpolate import make_interp_spline, BSpline
 #import params
-
+params = {'text.usetex': False, 'mathtext.fontset': 'stixsans'}
+plt.rcParams.update(params)
+#matplotlib.rcParams['text.usetex'] = False
+#matplotlib.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}'] #for \text command
+#matplotlib.rcParams['mathtext.fontset'] = ['stixsans'] #for \text command
 #matplotlib.rc('text', usetex=True)
 #matplotlib.rcParams['text.latex.preamble'] = [r'\boldmath']
+#plt.rcParams["font.weight"] = "bold"
+#plt.rcParams["axes.labelweight"] = "bold"
 #from scipy.interpolate import Bspline
 #from ggplot import *
 #import easygui as eg
-
+#
 #sns.set_style("ticks", {"xtick.major.size":8,"ytick.major.size":8})
 #rcParams['figure.figsize'] = (12, 7)
 #rcParams['font.size'] = 14
-# rcParams['axes', linewidth=3]
+#rcParams['axes', linewidth=3]
 
 
 vel=[1,4,10,20,40,80]
@@ -61,7 +69,6 @@ kappa_asth = 1e-5
 #vel=[1,4,10,20,40,80]
 
 rho_contrast    =0
-rho_contrast2   =0
 rho_contrast3   =0
 rho_contrast_rho=0
 buoyancy_plot   =0
@@ -75,7 +82,7 @@ Tecton_FbouyTime=0
 Tecton_FbouyShorten=0
 Effect_advA     =0
 Effect_advB     =0
-Effect_diffus  =0
+Effect_diffus   =0
 FtotShorten     =10
 minFbuoy        =0
 InitTrho        =0
@@ -295,444 +302,8 @@ def set_style2():
         "font.serif": ["Times", "Palatino", "serif"]})
 #    sns.axes_style("whitegrid")
     
-#==============================================================================
+#==============================================================================   
 if (rho_contrast>0.):
-    lim = 400
-#    vel2=np.array([4,20,40,60,80])
-    vel2=np.array([4,20,80])
-    delrho = np.arange(0,81,2)
-
-    slab80_vel80=np.zeros((len(delrho),2))
-    slab80_vel60=np.zeros((len(delrho),2))
-    slab80_vel40=np.zeros((len(delrho),2))
-    slab80_vel20=np.zeros((len(delrho),2))
-    slab80_vel4=np.zeros((len(delrho),2))
-    
-    slab160_vel80=np.zeros((len(delrho),2))
-    slab160_vel60=np.zeros((len(delrho),2))
-    slab160_vel40=np.zeros((len(delrho),2))
-    slab160_vel20=np.zeros((len(delrho),2))
-    slab160_vel4=np.zeros((len(delrho),2))
-    
-    no_points=len(vel2)
-## SLAB 80 ####
-    for i in range(len(delrho)):
-        globals()['slab80v80min{}'.format(i)]=np.zeros((len(delrho),2))
-#        globals()['slab80v60min{}'.format(i)]=np.zeros((len(delrho),2))
-#        globals()['slab80v40min{}'.format(i)]=np.zeros((len(delrho),2))
-        globals()['slab80v20min{}'.format(i)]=np.zeros((len(delrho),2))
-        globals()['slab80v4min{}'.format(i)]=np.zeros((len(delrho),2))
-    for i in range(len(delrho)):
-        globals()['dfslab80v80_{}'.format(i)]=pd.read_csv('slab80_delRho'+str(delrho[i])+'_vel_80.csv')
-        globals()['slab80v80min{}'.format(i)]=np.zeros((len(delrho),2))
-       
-#        globals()['dfslab80v60_{}'.format(i)]=pd.read_csv('slab80_delRho'+str(delrho[i])+'_vel_60.csv')
-#        globals()['slab80v60min{}'.format(i)]=np.zeros((len(delrho),2))
-#        
-#        globals()['dfslab80v40_{}'.format(i)]=pd.read_csv('slab80_delRho'+str(delrho[i])+'_vel_40.csv')
-#        globals()['slab80v40min{}'.format(i)]=np.zeros((len(delrho),2))
-        
-        globals()['dfslab80v20_{}'.format(i)]=pd.read_csv('slab80_delRho'+str(delrho[i])+'_vel_20.csv')
-        globals()['slab80v20min{}'.format(i)]=np.zeros((len(delrho),2))
-        
-        globals()['dfslab80v4_{}'.format(i)]=pd.read_csv('slab80_delRho'+str(delrho[i])+'_vel_4.csv')
-        globals()['slab80v4min{}'.format(i)]=np.zeros((len(delrho),2))
-    for i in range(len(delrho)):
-        limit80=np.where(globals()['dfslab80v80_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab80v80_min{}'.format(i)]=min(globals()['dfslab80v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
-        globals()['slab80v80min{}'.format(i)][i,0] = (globals()['slab80v80_min{}'.format(i)])
-        slab80_vel80[i,0] = (globals()['slab80v80_min{}'.format(i)])
-        jj1 = np.where(globals()['dfslab80v80_{}'.format(i)]['Ftot']==min(globals()['dfslab80v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
-        slab80_vel80[i,1] =globals()['dfslab80v80_{}'.format(i)]['time'][jj1]
-        
-#        limit60=np.where(globals()['dfslab80v60_{}'.format(i)]['shorten']<lim)[0][-1]
-#        globals()['slab80v60_min{}'.format(i)]=min(globals()['dfslab80v60_{}'.format(i)]['Ftot'][0:limit60])/1e12
-#        globals()['slab80v60min{}'.format(i)][i,0] = (globals()['slab80v60_min{}'.format(i)])
-#        slab80_vel60[i,0] = (globals()['slab80v60_min{}'.format(i)])
-#        jj2 = np.where(globals()['dfslab80v60_{}'.format(i)]['Ftot']==min(globals()['dfslab80v60_{}'.format(i)]['Ftot'][0:limit60]))[0][-1]
-#        slab80_vel60[i,1] =np.round(globals()['dfslab80v60_{}'.format(i)]['time'][jj2],1)
-#
-#        limit40=np.where(globals()['dfslab80v40_{}'.format(i)]['shorten']<lim)[0][-1]
-#        globals()['slab80v40_min{}'.format(i)]=min(globals()['dfslab80v40_{}'.format(i)]['Ftot'][0:limit40])/1e12
-#        globals()['slab80v40min{}'.format(i)][i,0] = (globals()['slab80v40_min{}'.format(i)])
-#        slab80_vel40[i,0] = (globals()['slab80v40_min{}'.format(i)])
-#        jj3 = np.where(globals()['dfslab80v40_{}'.format(i)]['Ftot']==min(globals()['dfslab80v40_{}'.format(i)]['Ftot'][0:limit40]))[0][-1]
-#        slab80_vel40[i,1] =np.round(globals()['dfslab80v40_{}'.format(i)]['time'][jj3],1)
-        
-        limit20=np.where(globals()['dfslab80v20_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab80v20_min{}'.format(i)]=min(globals()['dfslab80v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
-        globals()['slab80v20min{}'.format(i)][i,0] = (globals()['slab80v20_min{}'.format(i)])
-        slab80_vel20[i,0] = (globals()['slab80v20_min{}'.format(i)])
-        jj4 = np.where(globals()['dfslab80v20_{}'.format(i)]['Ftot']==min(globals()['dfslab80v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
-        slab80_vel20[i,1] =globals()['dfslab80v20_{}'.format(i)]['time'][jj4]
-        
-        limit4=np.where(globals()['dfslab80v4_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab80v4_min{}'.format(i)]=min(globals()['dfslab80v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
-        globals()['slab80v4min{}'.format(i)][i,0] = (globals()['slab80v4_min{}'.format(i)])
-        slab80_vel4[i,0] = (globals()['slab80v4_min{}'.format(i)])
-        jj5 = np.where(globals()['dfslab80v4_{}'.format(i)]['Ftot']==min(globals()['dfslab80v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
-        slab80_vel4[i,1] =globals()['dfslab80v4_{}'.format(i)]['time'][jj5]
- 
-## SLAB 160 ####           
-    for i in range(len(delrho)):
-        globals()['slab160v80min{}'.format(i)]=np.zeros((len(delrho),2))
-#        globals()['slab160v60min{}'.format(i)]=np.zeros((len(delrho),2))
-#        globals()['slab160v40min{}'.format(i)]=np.zeros((len(delrho),2))
-        globals()['slab160v20min{}'.format(i)]=np.zeros((len(delrho),2))
-        globals()['slab160v4min{}'.format(i)]=np.zeros((len(delrho),2))
-    for i in range(len(delrho)):
-        globals()['dfslab160v80_{}'.format(i)]=pd.read_csv('slab160_delRho'+str(delrho[i])+'_vel_80.csv')
-        globals()['slab160v80min{}'.format(i)]=np.zeros((len(delrho),2))
-       
-#        globals()['dfslab160v60_{}'.format(i)]=pd.read_csv('slab160_delRho'+str(delrho[i])+'_vel_60.csv')
-#        globals()['slab160v60min{}'.format(i)]=np.zeros((len(delrho),2))
-#        
-#        globals()['dfslab160v40_{}'.format(i)]=pd.read_csv('slab160_delRho'+str(delrho[i])+'_vel_40.csv')
-#        globals()['slab160v40min{}'.format(i)]=np.zeros((len(delrho),2))
-        
-        globals()['dfslab160v20_{}'.format(i)]=pd.read_csv('slab160_delRho'+str(delrho[i])+'_vel_20.csv')
-        globals()['slab160v20min{}'.format(i)]=np.zeros((len(delrho),2))
-        
-        globals()['dfslab160v4_{}'.format(i)]=pd.read_csv('slab160_delRho'+str(delrho[i])+'_vel_4.csv')
-        globals()['slab160v4min{}'.format(i)]=np.zeros((len(delrho),2))
-    for i in range(len(delrho)):
-        limit80=np.where(globals()['dfslab160v80_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab160v80_min{}'.format(i)]=min(globals()['dfslab160v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
-        globals()['slab160v80min{}'.format(i)][i,0] = (globals()['slab160v80_min{}'.format(i)])
-        slab160_vel80[i,0] = (globals()['slab160v80_min{}'.format(i)])
-        jj1 = np.where(globals()['dfslab160v80_{}'.format(i)]['Ftot']==min(globals()['dfslab160v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
-        slab160_vel80[i,1] =globals()['dfslab160v80_{}'.format(i)]['time'][jj1]
-        
-#        limit60=np.where(globals()['dfslab160v60_{}'.format(i)]['shorten']<lim)[0][-1]
-#        globals()['slab160v60_min{}'.format(i)]=min(globals()['dfslab160v60_{}'.format(i)]['Ftot'][0:limit60])/1e12
-#        globals()['slab160v60min{}'.format(i)][i,0] = (globals()['slab160v60_min{}'.format(i)])
-#        slab160_vel60[i,0] = (globals()['slab160v60_min{}'.format(i)])
-#        jj2 = np.where(globals()['dfslab160v60_{}'.format(i)]['Ftot']==min(globals()['dfslab160v60_{}'.format(i)]['Ftot'][0:limit60]))[0][-1]
-#        slab160_vel60[i,1] =np.round(globals()['dfslab160v60_{}'.format(i)]['time'][jj2],1)
-
-#        limit40=np.where(globals()['dfslab160v40_{}'.format(i)]['shorten']<lim)[0][-1]
-#        globals()['slab160v40_min{}'.format(i)]=min(globals()['dfslab160v40_{}'.format(i)]['Ftot'][0:limit40])/1e12
-#        globals()['slab160v40min{}'.format(i)][i,0] = (globals()['slab160v40_min{}'.format(i)])
-#        slab160_vel40[i,0] = (globals()['slab160v40_min{}'.format(i)])
-#        jj3 = np.where(globals()['dfslab160v40_{}'.format(i)]['Ftot']==min(globals()['dfslab160v40_{}'.format(i)]['Ftot'][0:limit40]))[0][-1]
-#        slab160_vel40[i,1] =np.round(globals()['dfslab160v40_{}'.format(i)]['time'][jj3],1)
-        
-        limit20=np.where(globals()['dfslab160v20_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab160v20_min{}'.format(i)]=min(globals()['dfslab160v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
-        globals()['slab160v20min{}'.format(i)][i,0] = (globals()['slab160v20_min{}'.format(i)])
-        slab160_vel20[i,0] = (globals()['slab160v20_min{}'.format(i)])
-        jj4 = np.where(globals()['dfslab160v20_{}'.format(i)]['Ftot']==min(globals()['dfslab160v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
-        slab160_vel20[i,1] =globals()['dfslab160v20_{}'.format(i)]['time'][jj4]
-        
-        limit4=np.where(globals()['dfslab160v4_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab160v4_min{}'.format(i)]=min(globals()['dfslab160v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
-        globals()['slab160v4min{}'.format(i)][i,0] = (globals()['slab160v4_min{}'.format(i)])
-        slab160_vel4[i,0] = (globals()['slab160v4_min{}'.format(i)])
-        jj5 = np.where(globals()['dfslab160v4_{}'.format(i)]['Ftot']==min(globals()['dfslab160v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
-        slab160_vel4[i,1] =globals()['dfslab160v4_{}'.format(i)]['time'][jj5]
-    
-    
-    def ismin(df_file):
-        limit=np.where(df_file['shorten']<400)[0][-1]
-        jj=np.where(df_file['Ftot']==min(df_file['Ftot'][0:limit]))[0][-1]
-        
-        if df_file['Ftot'][jj] < df_file['Ftot'][jj+3]:
-            isitmin=1
-        else:
-            isitmin=0
-            
-        return isitmin
-        
-    isitmin80 = np.zeros((len(delrho),len(vel2)))
-    isitmin160 = np.zeros((len(delrho),len(vel2)))
-    
-#    for i in range(len(vel2)):
-    for j in range(len(delrho)):
-        if ismin(globals()['dfslab80v4_{}'.format(j)])==1:
-            isitmin80[j,0]=1
-        if ismin(globals()['dfslab80v20_{}'.format(j)])==1:
-            isitmin80[j,1]=1
-        if ismin(globals()['dfslab80v80_{}'.format(j)])==1:
-            isitmin80[j,2]=1
-        if ismin(globals()['dfslab160v4_{}'.format(j)])==1:
-            isitmin160[j,0]=1
-        if ismin(globals()['dfslab160v20_{}'.format(j)])==1:
-            isitmin160[j,1]=1
-        if ismin(globals()['dfslab160v80_{}'.format(j)])==1:
-            isitmin160[j,2]=1
-            
-            
-    def find3(df,delrho,th,k):
-        zzz=np.round(df['Ftot'])
-        idx=max(np.where(zzz>=-3e+12)[0])
-        th[:,0] = delrho[:]
-        if np.shape(np.where(zzz<=-3e+12))[1]==len(zzz):
-            th[k,1] = 0
-        else:
-            th[k,1] = df['time'][idx]
-#        th[k,1] = df['time'][idx]
-        return th
-
-    th80v4_ = np.zeros((len(delrho),2))
-    th80v20_ = np.zeros((len(delrho),2))
-    th80v80_ = np.zeros((len(delrho),2))
-    th160v4_ = np.zeros((len(delrho),2))
-    th160v20_ = np.zeros((len(delrho),2))
-    th160v80_ = np.zeros((len(delrho),2))
-    
-    for i in range(len(delrho)):
-        th80v4=find3(globals()['dfslab80v4_{}'.format(i)],delrho,th80v4_,i)
-        th80v20=find3(globals()['dfslab80v20_{}'.format(i)],delrho,th80v20_,i)
-        th80v80=find3(globals()['dfslab80v80_{}'.format(i)],delrho,th80v80_,i)
-        th160v4=find3(globals()['dfslab160v4_{}'.format(i)],delrho,th160v4_,i)
-        th160v20=find3(globals()['dfslab160v20_{}'.format(i)],delrho,th160v20_,i)
-        th160v80=find3(globals()['dfslab160v80_{}'.format(i)],delrho,th160v80_,i)
-    
-#    zzz=np.round(dfslab160v4_4['Ftot'])
-#    th160v4[4,1]=dfslab160v4_4['time'][max(np.where(zzz<-3e+12)[0])]
-    ## Line fitting for 30mm/yr set
-#    def exponenial_func(x, a, b, c):
-#        return a*np.exp(-b*x)+c
-    contrast = np.linspace(min(delrho), max(delrho), 11)
-    fitdeg = 7
-    fitdeg2=6
-    
-#    popt80_v80, pcov80_v80 = curve_fit(exponenial_func, delrho, np.array(slab80_vel80[:,0]), p0=(1, 1e-6, 1))
-#    popt80_v20, pcov80_v20 = curve_fit(exponenial_func, delrho, np.array(slab80_vel20[:,0]), p0=(1, 1e-6, 1))
-#    popt80_v4, pcov80_v4 = curve_fit(exponenial_func, delrho, np.array(slab80_vel4[:,0]), p0=(1, 1e-6, 1))
-#    
-#    popt160_v80, pcov160_v80 = curve_fit(exponenial_func, delrho, np.array(slab160_vel80[:,0]))
-#    popt160_v20, pcov160_v20 = curve_fit(exponenial_func, delrho, np.array(slab160_vel20[:,0]))
-#    popt160_v4, pcov160_v4 = curve_fit(exponenial_func, delrho, np.array(slab160_vel4[:,0]))
-######----------------------------------------------------------###
-    p80_v80 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab80_vel80[:,0]), fitdeg)))
-#    p80_v60 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab80_vel60[:,0]), fitdeg)))
-#    p80_v40 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab80_vel40[:,0]), fitdeg)))
-    p80_v20 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab80_vel20[:,0]), fitdeg)))
-    p80_v4 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab80_vel4[:,0]), fitdeg)))
-######----------------------------------------------------------###
-    p160_v80 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab160_vel80[:,0]),15)))
-#    p160_v60 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab160_vel60[:,0]), fitdeg2)))
-#    p160_v40 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab160_vel40[:,0]), fitdeg2)))
-    p160_v20 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab160_vel20[:,0]), fitdeg2)))
-    p160_v4 = np.poly1d(np.squeeze(np.polyfit(delrho,np.array(slab160_vel4[:,0]), fitdeg2)))
-######----------------------------------------------------------###    
-    xp = np.linspace(min(delrho), 150, 100)
-    xp2=np.linspace(min(delrho),80, 100)
-    xp3=np.linspace(min(delrho),70, 100)
-    fig111=plt.figure(111,figsize=(11,8))
-    fig111.clf()
-    ax1 = fig111.add_subplot(111)
-    linWid=1.5
-    dot=50
-    star=160
-    xk =['xkcd:goldenrod','xkcd:orange','xkcd:orangered','xkcd:plum','xkcd:magenta']
-    
-    a4=np.where(isitmin80[:,0]==1)[0]
-    a20=np.where(isitmin80[:,1]==1)[0]
-    a80=np.where(isitmin80[:,2]==1)[0]
-    b4=np.where(isitmin160[:,0]==1)[0]
-    b20=np.where(isitmin160[:,1]==1)[0]
-    b80=np.where(isitmin160[:,2]==1)[0]
-    aa4=np.where(isitmin80[:,0]==0)[0]
-    aa20=np.where(isitmin80[:,1]==0)[0]
-    aa80=np.where(isitmin80[:,2]==0)[0]
-    bb4=np.where(isitmin160[:,0]==0)[0]
-    bb20=np.where(isitmin160[:,1]==0)[0]
-    bb80=np.where(isitmin160[:,2]==0)[0]
-    
-    def bind(xp2,minfile):
-        mix=np.zeros((len(xp2),2))
-        mix[:,0]=xp2[:]
-        for i in range(9):
-            mix[np.where(np.round(mix[:,0])<=(8-i)*10),1]=minfile[8-i,1]
-            
-        return mix
-    
-    ax1.plot([], [], ' ', label=" ")
-    ax1.annotate("80km", xy=(63.8,-6.3),xycoords='data',fontsize=16)
-    fig111.texts.append(ax1.texts.pop())
-    culor=[110,170,500]
-    for i in range(len(vel2)):
-        ax1.plot(xp,globals()['p80_v{}'.format(vel2[i])](xp), \
-                color=plt.cm.winter_r(1.*i/(no_points)), linewidth=linWid, label=' ')
-                
-    ax1.plot([], [], ' ', label=" ")
-    ax1.annotate("160km", xy=(69.6,-6.3),xycoords='data',fontsize=16)           
-    fig111.texts.append(ax1.texts.pop())
-    for i in range(len(vel2)):
-        ax1.plot(xp,globals()['p160_v{}'.format(vel2[i])](xp), '--', \
-                color=plt.cm.winter_r(1.*i/(no_points)), linewidth=linWid, label=str(vel2[i])) 
-##        ax1.scatter(delrho,globals()['slab80_vel{}'.format(vel2[i])],s=dot, \
-##                color=plt.cm.winter_r(1.*i/(no_points)), label=str(vel2[i]))
-#        yy80=exponenial_func(xp,*globals()['popt80_v{}'.format(vel2[i])])
-#        yy160=exponenial_func(xp,*globals()['popt160_v{}'.format(vel2[i])])
-#        ax1.plot(xp,yy80,color=plt.cm.winter_r(1.*i/(no_points)), linewidth=linWid, label=str(vel2[i]))
-#        ax1.plot(xp,yy160, '--', color=xk[i], linewidth=linWid, label=str(vel2[i])) 
-#        
-#                
-#    for i in range(len(vel2)): 
-#        if i in [0,1]:
-#            ax1.plot(xp,globals()['p160_v{}'.format(vel2[i])](xp), '--', \
-#                    color=xk[i], linewidth=linWid, label=str(vel2[i]))  
-#            ax1.plot(delrho,globals()['slab160_vel{}'.format(vel2[i])], '--o', \
-#                    color=xk[i], linewidth=linWid, label=str(vel2[i]))   
-##            ax1.scatter(delrho,globals()['slab160_vel{}'.format(vel2[i])],s=dot, \
-##                   color=xk[i], label=str(vel2[i]))
-#        elif i in [2]:
-#            ax1.plot(xp2,globals()['p160_v{}'.format(vel2[i])](xp2), '--', \
-#                        color=xk[i], linewidth=linWid)    
-#            ax1.plot(delrho[35:],globals()['slab160_vel{}'.format(vel2[i])][35:,0]*0, '--',\
-#                        color=xk[i], linewidth=linWid, label=str(vel2[i]))  
-#            ax1.scatter(delrho,globals()['slavel{}'.fb160_vel{}'.format(vel2[i])][i,0],s=dot, \
-#                        c=globals()['slab160_ormat(vel2[i])][i,1],cmap=plt.cm.viridis, label=str(vel2[i]))
-#    ax1.scatter(delrho[2:],slab160_vel4[2:,0],s=dot-20,color='k',label='160 km thick')
-#    ax1.scatter(delrho[1:],slab80_vel4[1:,0],s=dot-20,marker='^',color='k',label='80 km thick')
-#    ax1.scatter(delrho[1],slab80_vel4[1,0],s=star-20,marker='*', color='gray',label='Not Min.')
-    zord=5
-    for i in [a4][0]:
-        ax1.scatter(delrho[i],slab80_vel4[i,0],s=dot,marker='^',zorder=zord,color=plt.cm.winter_r(1.*0/(no_points)))
-    for i in [aa4][0]:
-        ax1.scatter(delrho[i],slab80_vel4[i,0],s=star,marker='*',zorder=zord, color='gray')
-    for i in [a20][0]:
-        ax1.scatter(delrho[i],slab80_vel20[i,0],s=dot,marker='^',zorder=zord,color=plt.cm.winter_r(1.*1/(no_points)))
-    for i in [aa20][0]:
-        ax1.scatter(delrho[i],slab80_vel20[i,0],s=star,marker='*',zorder=zord, color='gray')
-    for i in [a80][0]:
-        ax1.scatter(delrho[i],slab80_vel80[i,0],s=dot,marker='^',zorder=zord,color=plt.cm.winter_r(1.*2/(no_points)))
-    for i in [aa80][0]:
-        ax1.scatter(delrho[i],slab80_vel80[i,0],s=star,marker='*',zorder=zord, color='gray')  
-    
-    for i in [b4][0]:
-        ax1.scatter(delrho[i],slab160_vel4[i,0],s=dot,zorder=zord,color=plt.cm.winter_r(1.*0/(no_points)))
-    for i in [bb4][0]:
-        ax1.scatter(delrho[i],slab160_vel4[i,0],s=star,marker='*',zorder=zord, color='gray') 
-    for i in [b20][0]:
-        ax1.scatter(delrho[i],slab160_vel20[i,0],s=dot,zorder=zord,color=plt.cm.winter_r(1.*1/(no_points)))
-    for i in [bb20][0]:
-        ax1.scatter(delrho[i],slab160_vel20[i,0],s=star,marker='*',zorder=zord, color='gray') 
-    for i in [b80][0]:
-        ax1.scatter(delrho[i],slab160_vel80[i,0],s=dot,zorder=zord,color=plt.cm.winter_r(1.*2/(no_points)))
-    for i in [bb80][0]:
-        ax1.scatter(delrho[i],slab160_vel80[i,0],s=star,marker='*',zorder=zord, color='gray')         
-        
-    
-    
-#    ax1.text(delrho[1]*(1-0.1),(slab80_vel4[1,0])*(1-0.2),slab80_vel4[1,1],fontsize=17)
-#    ax1.text(delrho[2]*(1-0.05),(slab80_vel4[2,0])*(1-0.25),slab80_vel4[2,1],fontsize=17)
-#    ax1.text(delrho[3]*(1-0.05),(slab80_vel4[3,0])*(1-0.28),slab80_vel4[3,1],fontsize=17)
-#    ax1.text(delrho[4]*(1-0.04),(slab80_vel4[4,0])*(1-0.6),slab80_vel4[4,1],fontsize=17)
-#    ax1.text(delrho[5]*(1-0.03),(slab80_vel4[5,0])*(1-1.1),slab80_vel4[5,1],fontsize=17)
-#    ax1.text(delrho[6]*(1-0.02),0.2,slab80_vel4[6,1],fontsize=17)
-#    ax1.text(delrho[7]*(1-0.015),0.2,slab80_vel4[7,1],fontsize=17)
-#    ax1.text(delrho[8]*(1-0.03),0.2,slab80_vel4[8,1],fontsize=17)
-#    
-#    ax1.text(delrho[2]*(1+0.05),(slab80_vel20[2,0])*(1-0.25),slab80_vel20[2,1],fontsize=17)
-#    ax1.text(delrho[3]*(1-0.05),(slab80_vel20[3,0])*(1-0.28),slab80_vel20[3,1],fontsize=17)
-#    ax1.text(delrho[4]*(1-0.04),(slab80_vel20[4,0])*(1-0.6),slab80_vel20[4,1],fontsize=17)
-#    ax1.text(delrho[5]*(1-0.03),(slab80_vel20[5,0])*(1-1.1),slab80_vel20[5,1],fontsize=17)
-#    ax1.text(delrho[6]*(1-0.02),0.2,slab80_vel20[6,1],fontsize=17)
-#    ax1.text(delrho[7]*(1-0.015),0.2,slab80_vel20[7,1],fontsize=17)
-#    ax1.text(delrho[8]*(1-0.03),0.2,slab80_vel20[8,1],fontsize=17)
-    
-
-
-#    ax1.fill([8,29,29,8],[-9,-9,2,2],'r',alpha=0.2)
-#    ax1.fill([12,61,61,12],[-9,-9,2,2],'b',alpha=0.2)
-#    ax1.fill([43,90,90,43],[-9,-9,2,2],'g',alpha=0.2)
-    
-    ax1.axvspan(8, 29,color = 'red', alpha = 0.08,zorder=0)
-    ax1.axvspan(12, 61, color = 'green', alpha = 0.08,zorder=0)
-    ax1.axvspan(43, 90, color = 'blue', alpha = 0.08,zorder=0)
-    
-#    def annotation_line( ax, xmin, xmax, y, text, ytext=0, linecolor='black', linewidth=1, fontsize=12 ):
-#    
-#        ax.annotate('', xy=(xmin, y), xytext=(xmax, y), xycoords='data', textcoords='data',
-#                arrowprops={'arrowstyle': '|-|', 'color':linecolor, 'linewidth':linewidth},)
-#        ax.annotate('', xy=(xmin, y), xytext=(xmax, y), xycoords='data', textcoords='data',
-#                arrowprops={'arrowstyle': '<|-|>', 'color':linecolor, 'linewidth':linewidth})
-#        xcenter = xmin + (xmax-xmin)/2
-#        if ytext==0:
-#            ytext = y + ( ax.get_ylim()[1] - ax.get_ylim()[0] ) / 20
-#        ax.annotate( text, xy=(xcenter,ytext), ha='center', va='center', fontsize=fontsize)
-#            
-#    def annotation_line2( ax, xmin, xmax, y, text, ytext=0, linecolor='black', linewidth=1, fontsize=12 ):
-#    
-#        ax.annotate('', xy=(xmin, y), xytext=(xmax, y), xycoords='data', textcoords='data',
-#                arrowprops={'arrowstyle': '|-|', 'color':linecolor, 'linewidth':linewidth})
-
-                          
-#    annotation_line(ax=ax1, text=' ', xmin=8, xmax=29.1, \
-#                    y=0.2, ytext=0.4, linewidth=2, linecolor='red', fontsize=16 )
-#    annotation_line(ax=ax1, text='Avg. Proton', xmin=12, xmax=61.1, \
-#                    y=0.4, ytext=0.2, linewidth=2, linecolor='green', fontsize=16 )
-##    annotation_line2( ax=ax1, text='Avg. Archon', xmin=43, xmax=80, \
-##                    y=0.2, ytext=0.4, linewidth=2, linecolor='blue', fontsize=16 )
-#    ax1.annotate('', xy=(42.9, 0.2), xytext=(60, 0.2), xycoords='data', textcoords='data',
-#                arrowprops={'arrowstyle': '-|>', 'color':'blue', 'linewidth':2})
-#    ax1.annotate('', xy=(60, 0.2), xytext=(80, 0.2), xycoords='data', textcoords='data',
-#                arrowprops={'arrowstyle': '-', 'ls': 'dashed', 'color':'blue', 'linewidth':2})
-##    ax1.annotate( 'Avg. Archon', xy=(66,-7.6), ha='center', va='center', fontsize=18)  
-#    ax1.annotate( 'Avg. Archon', xy=(70,0.38), ha='center', va='center', fontsize=16) 
-#    ax1.annotate( '|', xy=(43.1,0.2),fontweight='bold', color='blue', ha='center', va='center', fontsize=23)   
-#    ax1.annotate( 'Avg. Tecton', xy=(18,0), ha='center', va='center', fontsize=16)                  
-#    ax1.text(67, -13.7, '80km', fontsize=22, rotation=90)
-#    ax1.text(67, -17.1, '160km', fontsize=22, rotation=90)
-    
-    ax1.text(14,0.05, 'Avg. Tecton',fontsize=15,color='red')#,bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
-    ax1.text(31,0.1, 'Avg. Proton',fontsize=15,color='green')#,bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
-    ax1.text(57,0.05, 'Avg. Archon',fontsize=15,color='purple')#,bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
-
-    ax1.fill([8,29,29,8],[0.3,0.3,0.4,0.4],color='red',alpha=0.5)
-    ax1.fill([12,61,61,12],[0.4,0.4,0.5,0.5],color='green',alpha=0.5)
-    ax1.fill([43,80,80,43],[0.3,0.3,0.4,0.4],color='purple',alpha=0.5)
-                    
-    hline=np.linspace(min(delrho),max(delrho))
-    ax1.plot(hline,(hline*0)-3,'k',alpha=0.4)
-    ax1.plot(hline,(hline*0),'gray',alpha=0.4)
-    
-    ax1.legend(title="v (mm/yr)",ncol=2,columnspacing=-0.2,loc='lower right', fontsize=16, frameon=True)._legend_box.align = "center"
-    ax1.get_legend().get_title().set_fontsize('16')
-    
-  
-    ax1.set_xlim(min(delrho),max(delrho))
-    ax1.set_ylim(-8,0.5)
-    
-    ax1.set_title("$/bigtriangleup /rho_{LAB}$ vs Minimum $F_{buoy}$ (within d=400km)", fontsize=20, fontweight='bold', loc='center',y=1.02)
-    ax1.set_xlabel('$/bigtriangleup /rho_{LAB} = /rho_{asth} - /rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold',y=-1.5)
-    ax1.set_ylabel('Slab pull / -F$_{bouy}$ ($10^{12}N/m$)',fontsize=20,fontweight='bold')
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    ax1.tick_params(direction='in',which='both',labelbottom=True, labeltop=False, labelleft=True, labelright=False,
-             bottom=True, top=True, left=True, right=True)
-    ax1.tick_params(which='major', length=12,width=1)
-    ax1.tick_params(which='minor', length=6)
-    xminorLocator1   = MultipleLocator(2)
-    yminorLocator1   = MultipleLocator(0.5)
-    ax1.xaxis.set_minor_locator(xminorLocator1)
-    ax1.yaxis.set_minor_locator(yminorLocator1)
-    
-    ax1.grid(linestyle='dotted')
-    ax1.xaxis.grid() 
-    plt.setp(ax1.spines.values(), color='k', linewidth=2)
-
-
-#    cax, _ = matplotlib.colorbar.make_axes(ax1)
-#    cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, norm=normalize)
-#    cbar.ax.tick_params(labelsize=16)
-#    cbar.ax.set_ylabel('Convergence Rate ($mm/yr$)', rotation=270, fontsize=18)
-#    cbar.ax.get_yaxis().labelpad = 30
-#    tick_locs = (np.arange(min(vel2)-.5,max(vel2)+.5,len(vel)))
-#    cbar.set_ticks(tick_locs)
-#    fig111.tight_layout()
-    
-    plt.show()
-    print("Images in directory %s" % dir)
-    os.chdir(dir)
-    fig111.savefig('rhocontrast_Fb.png', format='png', dpi=300)
-    os.chdir('..')
-    
-if (rho_contrast2>0.):
     lim = 400
 #    vel2=np.array([4,20,40,60,80])
     vel2=np.array([4,20,80])
@@ -747,13 +318,13 @@ if (rho_contrast2>0.):
     slab160_vel20=np.zeros((len(delrho),2))
     slab160_vel4=np.zeros((len(delrho),2))
     
-    oc60_vel80=np.zeros((len(delrho2),2))
-    oc60_vel20=np.zeros((len(delrho2),2))
-    oc60_vel4=np.zeros((len(delrho2),2))
-    
-    oc110_vel80=np.zeros((len(delrho2),2))
-    oc110_vel20=np.zeros((len(delrho2),2))
-    oc110_vel4=np.zeros((len(delrho2),2))
+#    oc60_vel80=np.zeros((len(delrho2),2))
+#    oc60_vel20=np.zeros((len(delrho2),2))
+#    oc60_vel4=np.zeros((len(delrho2),2))
+#    
+#    oc110_vel80=np.zeros((len(delrho2),2))
+#    oc110_vel20=np.zeros((len(delrho2),2))
+#    oc110_vel4=np.zeros((len(delrho2),2))
     
     no_points=len(vel2)
 
@@ -766,14 +337,14 @@ if (rho_contrast2>0.):
         globals()['slab160v20min{}'.format(i)]=np.zeros((len(delrho),2))
         globals()['slab160v4min{}'.format(i)]=np.zeros((len(delrho),2))
    
-    for i in range(len(delrho2)):     
-        globals()['oc60v80min{}'.format(i)]=np.zeros((len(delrho2),2))
-        globals()['oc60v20min{}'.format(i)]=np.zeros((len(delrho2),2))
-        globals()['oc60v4min{}'.format(i)]=np.zeros((len(delrho2),2))
-        
-        globals()['oc110v80min{}'.format(i)]=np.zeros((len(delrho2),2))
-        globals()['oc110v20min{}'.format(i)]=np.zeros((len(delrho2),2))
-        globals()['oc110v4min{}'.format(i)]=np.zeros((len(delrho2),2))
+#    for i in range(len(delrho2)):     
+#        globals()['oc60v80min{}'.format(i)]=np.zeros((len(delrho2),2))
+#        globals()['oc60v20min{}'.format(i)]=np.zeros((len(delrho2),2))
+#        globals()['oc60v4min{}'.format(i)]=np.zeros((len(delrho2),2))
+#        
+#        globals()['oc110v80min{}'.format(i)]=np.zeros((len(delrho2),2))
+#        globals()['oc110v20min{}'.format(i)]=np.zeros((len(delrho2),2))
+#        globals()['oc110v4min{}'.format(i)]=np.zeros((len(delrho2),2))
         
     for i in range(len(delrho)):
         globals()['dfslab80v80_{}'.format(i)]=pd.read_csv('slab80_delRho'+str(delrho[i])+'_vel_80.csv')
@@ -794,131 +365,132 @@ if (rho_contrast2>0.):
         globals()['dfslab160v4_{}'.format(i)]=pd.read_csv('slab160_delRho'+str(delrho[i])+'_vel_4.csv')
         globals()['slab160v4min{}'.format(i)]=np.zeros((len(delrho),2))
     
-    for i in range(len(delrho2)):    
-        globals()['dfoc60v80_{}'.format(i)]=pd.read_csv('oc60_delRho'+str(delrho2[i])+'_vel_80.csv')
-        globals()['oc60v80min{}'.format(i)]=np.zeros((len(delrho2),2))      
-        
-        globals()['dfoc60v20_{}'.format(i)]=pd.read_csv('oc60_delRho'+str(delrho2[i])+'_vel_20.csv')
-        globals()['oc60v20min{}'.format(i)]=np.zeros((len(delrho2),2))
-        
-        globals()['dfoc60v4_{}'.format(i)]=pd.read_csv('oc60_delRho'+str(delrho2[i])+'_vel_4.csv')
-        globals()['oc60v4min{}'.format(i)]=np.zeros((len(delrho2),2))
-        
-        globals()['dfoc110v80_{}'.format(i)]=pd.read_csv('oc110_delRho'+str(delrho2[i])+'_vel_80.csv')
-        globals()['oc110v80min{}'.format(i)]=np.zeros((len(delrho2),2))      
-        
-        globals()['dfoc110v20_{}'.format(i)]=pd.read_csv('oc110_delRho'+str(delrho2[i])+'_vel_20.csv')
-        globals()['oc110v20min{}'.format(i)]=np.zeros((len(delrho2),2))
-        
-        globals()['dfoc110v4_{}'.format(i)]=pd.read_csv('oc110_delRho'+str(delrho2[i])+'_vel_4.csv')
-        globals()['oc110v4min{}'.format(i)]=np.zeros((len(delrho2),2))
+#    for i in range(len(delrho2)):    
+#        globals()['dfoc60v80_{}'.format(i)]=pd.read_csv('oc60_delRho'+str(delrho2[i])+'_vel_80.csv')
+#        globals()['oc60v80min{}'.format(i)]=np.zeros((len(delrho2),2))      
+#        
+#        globals()['dfoc60v20_{}'.format(i)]=pd.read_csv('oc60_delRho'+str(delrho2[i])+'_vel_20.csv')
+#        globals()['oc60v20min{}'.format(i)]=np.zeros((len(delrho2),2))
+#        
+#        globals()['dfoc60v4_{}'.format(i)]=pd.read_csv('oc60_delRho'+str(delrho2[i])+'_vel_4.csv')
+#        globals()['oc60v4min{}'.format(i)]=np.zeros((len(delrho2),2))
+#        
+#        globals()['dfoc110v80_{}'.format(i)]=pd.read_csv('oc110_delRho'+str(delrho2[i])+'_vel_80.csv')
+#        globals()['oc110v80min{}'.format(i)]=np.zeros((len(delrho2),2))      
+#        
+#        globals()['dfoc110v20_{}'.format(i)]=pd.read_csv('oc110_delRho'+str(delrho2[i])+'_vel_20.csv')
+#        globals()['oc110v20min{}'.format(i)]=np.zeros((len(delrho2),2))
+#        
+#        globals()['dfoc110v4_{}'.format(i)]=pd.read_csv('oc110_delRho'+str(delrho2[i])+'_vel_4.csv')
+#        globals()['oc110v4min{}'.format(i)]=np.zeros((len(delrho2),2))
         
         
 ## SLAB 80 ####        
-    for i in range(len(delrho)):
-        limit80=np.where(globals()['dfslab80v80_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab80v80_min{}'.format(i)]=min(globals()['dfslab80v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
-        globals()['slab80v80min{}'.format(i)][i,0] = (globals()['slab80v80_min{}'.format(i)])
-        slab80_vel80[i,0] = (globals()['slab80v80_min{}'.format(i)])
-        jj1 = np.where(globals()['dfslab80v80_{}'.format(i)]['Ftot']==min(globals()['dfslab80v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
-        slab80_vel80[i,1] =np.round(globals()['dfslab80v80_{}'.format(i)]['time'][jj1],1)
-        
-        limit20=np.where(globals()['dfslab80v20_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab80v20_min{}'.format(i)]=min(globals()['dfslab80v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
-        globals()['slab80v20min{}'.format(i)][i,0] = (globals()['slab80v20_min{}'.format(i)])
-        slab80_vel20[i,0] = (globals()['slab80v20_min{}'.format(i)])
-        jj4 = np.where(globals()['dfslab80v20_{}'.format(i)]['Ftot']==min(globals()['dfslab80v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
-        slab80_vel20[i,1] =np.round(globals()['dfslab80v20_{}'.format(i)]['time'][jj4],1)
-        
-        limit4=np.where(globals()['dfslab80v4_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab80v4_min{}'.format(i)]=min(globals()['dfslab80v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
-        globals()['slab80v4min{}'.format(i)][i,0] = (globals()['slab80v4_min{}'.format(i)])
-        slab80_vel4[i,0] = (globals()['slab80v4_min{}'.format(i)])
-        jj5 = np.where(globals()['dfslab80v4_{}'.format(i)]['Ftot']==min(globals()['dfslab80v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
-        slab80_vel4[i,1] =np.round(globals()['dfslab80v4_{}'.format(i)]['time'][jj5],1)
+#    for i in range(len(delrho)):
+#        limit80=np.where(globals()['dfslab80v80_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['slab80v80_min{}'.format(i)]=min(globals()['dfslab80v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
+#        globals()['slab80v80min{}'.format(i)][i,0] = (globals()['slab80v80_min{}'.format(i)])
+#        slab80_vel80[i,0] = (globals()['slab80v80_min{}'.format(i)])
+#        jj1 = np.where(globals()['dfslab80v80_{}'.format(i)]['Ftot']==min(globals()['dfslab80v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
+#        slab80_vel80[i,1] =np.round(globals()['dfslab80v80_{}'.format(i)]['time'][jj1],1)
+#        
+#        limit20=np.where(globals()['dfslab80v20_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['slab80v20_min{}'.format(i)]=min(globals()['dfslab80v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
+#        globals()['slab80v20min{}'.format(i)][i,0] = (globals()['slab80v20_min{}'.format(i)])
+#        slab80_vel20[i,0] = (globals()['slab80v20_min{}'.format(i)])
+#        jj4 = np.where(globals()['dfslab80v20_{}'.format(i)]['Ftot']==min(globals()['dfslab80v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
+#        slab80_vel20[i,1] =np.round(globals()['dfslab80v20_{}'.format(i)]['time'][jj4],1)
+#        
+#        limit4=np.where(globals()['dfslab80v4_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['slab80v4_min{}'.format(i)]=min(globals()['dfslab80v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
+#        globals()['slab80v4min{}'.format(i)][i,0] = (globals()['slab80v4_min{}'.format(i)])
+#        slab80_vel4[i,0] = (globals()['slab80v4_min{}'.format(i)])
+#        jj5 = np.where(globals()['dfslab80v4_{}'.format(i)]['Ftot']==min(globals()['dfslab80v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
+#        slab80_vel4[i,1] =np.round(globals()['dfslab80v4_{}'.format(i)]['time'][jj5],1)
  
 ## SLAB 160 ####           
-    for i in range(len(delrho)):
-        limit80=np.where(globals()['dfslab160v80_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab160v80_min{}'.format(i)]=min(globals()['dfslab160v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
-        globals()['slab160v80min{}'.format(i)][i,0] = (globals()['slab160v80_min{}'.format(i)])
-        slab160_vel80[i,0] = (globals()['slab160v80_min{}'.format(i)])
-        jj1 = np.where(globals()['dfslab160v80_{}'.format(i)]['Ftot']==min(globals()['dfslab160v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
-        slab160_vel80[i,1] =np.round(globals()['dfslab160v80_{}'.format(i)]['time'][jj1],1)
-
-        limit20=np.where(globals()['dfslab160v20_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab160v20_min{}'.format(i)]=min(globals()['dfslab160v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
-        globals()['slab160v20min{}'.format(i)][i,0] = (globals()['slab160v20_min{}'.format(i)])
-        slab160_vel20[i,0] = (globals()['slab160v20_min{}'.format(i)])
-        jj4 = np.where(globals()['dfslab160v20_{}'.format(i)]['Ftot']==min(globals()['dfslab160v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
-        slab160_vel20[i,1] =np.round(globals()['dfslab160v20_{}'.format(i)]['time'][jj4],1)
-        
-        limit4=np.where(globals()['dfslab160v4_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['slab160v4_min{}'.format(i)]=min(globals()['dfslab160v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
-        globals()['slab160v4min{}'.format(i)][i,0] = (globals()['slab160v4_min{}'.format(i)])
-        slab160_vel4[i,0] = (globals()['slab160v4_min{}'.format(i)])
-        jj5 = np.where(globals()['dfslab160v4_{}'.format(i)]['Ftot']==min(globals()['dfslab160v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
-        slab160_vel4[i,1] =np.round(globals()['dfslab160v4_{}'.format(i)]['time'][jj5],1)
+#    for i in range(len(delrho)):
+#        limit80=np.where(globals()['dfslab160v80_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['slab160v80_min{}'.format(i)]=min(globals()['dfslab160v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
+#        globals()['slab160v80min{}'.format(i)][i,0] = (globals()['slab160v80_min{}'.format(i)])
+#        slab160_vel80[i,0] = (globals()['slab160v80_min{}'.format(i)])
+#        jj1 = np.where(globals()['dfslab160v80_{}'.format(i)]['Ftot']==min(globals()['dfslab160v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
+#        slab160_vel80[i,1] =np.round(globals()['dfslab160v80_{}'.format(i)]['time'][jj1],1)
+#
+#        limit20=np.where(globals()['dfslab160v20_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['slab160v20_min{}'.format(i)]=min(globals()['dfslab160v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
+#        globals()['slab160v20min{}'.format(i)][i,0] = (globals()['slab160v20_min{}'.format(i)])
+#        slab160_vel20[i,0] = (globals()['slab160v20_min{}'.format(i)])
+#        jj4 = np.where(globals()['dfslab160v20_{}'.format(i)]['Ftot']==min(globals()['dfslab160v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
+#        slab160_vel20[i,1] =np.round(globals()['dfslab160v20_{}'.format(i)]['time'][jj4],1)
+#        
+#        limit4=np.where(globals()['dfslab160v4_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['slab160v4_min{}'.format(i)]=min(globals()['dfslab160v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
+#        globals()['slab160v4min{}'.format(i)][i,0] = (globals()['slab160v4_min{}'.format(i)])
+#        slab160_vel4[i,0] = (globals()['slab160v4_min{}'.format(i)])
+#        jj5 = np.where(globals()['dfslab160v4_{}'.format(i)]['Ftot']==min(globals()['dfslab160v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
+#        slab160_vel4[i,1] =np.round(globals()['dfslab160v4_{}'.format(i)]['time'][jj5],1)
     
     
 ## OC 60 ####           
-    for i in range(len(delrho2)):
-        limit80=np.where(globals()['dfoc60v80_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['oc60v80_min{}'.format(i)]=min(globals()['dfoc60v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
-        globals()['oc60v80min{}'.format(i)][i,0] = (globals()['oc60v80_min{}'.format(i)])
-        oc60_vel80[i,0] = (globals()['oc60v80_min{}'.format(i)])
-        jj1 = np.where(globals()['dfoc60v80_{}'.format(i)]['Ftot']==min(globals()['dfoc60v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
-        oc60_vel80[i,1] =np.round(globals()['dfoc60v80_{}'.format(i)]['time'][jj1],1)
-
-        limit20=np.where(globals()['dfoc60v20_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['oc60v20_min{}'.format(i)]=min(globals()['dfoc60v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
-        globals()['oc60v20min{}'.format(i)][i,0] = (globals()['oc60v20_min{}'.format(i)])
-        oc60_vel20[i,0] = (globals()['oc60v20_min{}'.format(i)])
-        jj4 = np.where(globals()['dfoc60v20_{}'.format(i)]['Ftot']==min(globals()['dfoc60v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
-        oc60_vel20[i,1] =np.round(globals()['dfoc60v20_{}'.format(i)]['time'][jj4],1)
-        
-        limit4=np.where(globals()['dfoc60v4_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['oc60v4_min{}'.format(i)]=min(globals()['dfoc60v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
-        globals()['oc60v4min{}'.format(i)][i,0] = (globals()['oc60v4_min{}'.format(i)])
-        oc60_vel4[i,0] = (globals()['oc60v4_min{}'.format(i)])
-        jj5 = np.where(globals()['dfoc60v4_{}'.format(i)]['Ftot']==min(globals()['dfoc60v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
-        oc60_vel4[i,1] =np.round(globals()['dfoc60v4_{}'.format(i)]['time'][jj5],1)
+#    for i in range(len(delrho2)):
+#        limit80=np.where(globals()['dfoc60v80_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['oc60v80_min{}'.format(i)]=min(globals()['dfoc60v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
+#        globals()['oc60v80min{}'.format(i)][i,0] = (globals()['oc60v80_min{}'.format(i)])
+#        oc60_vel80[i,0] = (globals()['oc60v80_min{}'.format(i)])
+#        jj1 = np.where(globals()['dfoc60v80_{}'.format(i)]['Ftot']==min(globals()['dfoc60v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
+#        oc60_vel80[i,1] =np.round(globals()['dfoc60v80_{}'.format(i)]['time'][jj1],1)
+#
+#        limit20=np.where(globals()['dfoc60v20_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['oc60v20_min{}'.format(i)]=min(globals()['dfoc60v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
+#        globals()['oc60v20min{}'.format(i)][i,0] = (globals()['oc60v20_min{}'.format(i)])
+#        oc60_vel20[i,0] = (globals()['oc60v20_min{}'.format(i)])
+#        jj4 = np.where(globals()['dfoc60v20_{}'.format(i)]['Ftot']==min(globals()['dfoc60v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
+#        oc60_vel20[i,1] =np.round(globals()['dfoc60v20_{}'.format(i)]['time'][jj4],1)
+#        
+#        limit4=np.where(globals()['dfoc60v4_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['oc60v4_min{}'.format(i)]=min(globals()['dfoc60v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
+#        globals()['oc60v4min{}'.format(i)][i,0] = (globals()['oc60v4_min{}'.format(i)])
+#        oc60_vel4[i,0] = (globals()['oc60v4_min{}'.format(i)])
+#        jj5 = np.where(globals()['dfoc60v4_{}'.format(i)]['Ftot']==min(globals()['dfoc60v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
+#        oc60_vel4[i,1] =np.round(globals()['dfoc60v4_{}'.format(i)]['time'][jj5],1)
     
     
 ## OC 110 ####           
-    for i in range(len(delrho2)):
-        limit80=np.where(globals()['dfoc110v80_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['oc110v80_min{}'.format(i)]=min(globals()['dfoc110v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
-        globals()['oc110v80min{}'.format(i)][i,0] = (globals()['oc110v80_min{}'.format(i)])
-        oc110_vel80[i,0] = (globals()['oc110v80_min{}'.format(i)])
-        jj1 = np.where(globals()['dfoc110v80_{}'.format(i)]['Ftot']==min(globals()['dfoc110v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
-        oc110_vel80[i,1] =np.round(globals()['dfoc110v80_{}'.format(i)]['time'][jj1],1)
-
-        limit20=np.where(globals()['dfoc110v20_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['oc110v20_min{}'.format(i)]=min(globals()['dfoc110v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
-        globals()['oc110v20min{}'.format(i)][i,0] = (globals()['oc110v20_min{}'.format(i)])
-        oc110_vel20[i,0] = (globals()['oc110v20_min{}'.format(i)])
-        jj4 = np.where(globals()['dfoc110v20_{}'.format(i)]['Ftot']==min(globals()['dfoc110v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
-        oc110_vel20[i,1] =np.round(globals()['dfoc110v20_{}'.format(i)]['time'][jj4],1)
-        
-        limit4=np.where(globals()['dfoc110v4_{}'.format(i)]['shorten']<lim)[0][-1]
-        globals()['oc110v4_min{}'.format(i)]=min(globals()['dfoc110v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
-        globals()['oc110v4min{}'.format(i)][i,0] = (globals()['oc110v4_min{}'.format(i)])
-        oc110_vel4[i,0] = (globals()['oc110v4_min{}'.format(i)])
-        jj5 = np.where(globals()['dfoc110v4_{}'.format(i)]['Ftot']==min(globals()['dfoc110v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
-        oc110_vel4[i,1] =np.round(globals()['dfoc110v4_{}'.format(i)]['time'][jj5],1)
+#    for i in range(len(delrho2)):
+#        limit80=np.where(globals()['dfoc110v80_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['oc110v80_min{}'.format(i)]=min(globals()['dfoc110v80_{}'.format(i)]['Ftot'][0:limit80])/1e12
+#        globals()['oc110v80min{}'.format(i)][i,0] = (globals()['oc110v80_min{}'.format(i)])
+#        oc110_vel80[i,0] = (globals()['oc110v80_min{}'.format(i)])
+#        jj1 = np.where(globals()['dfoc110v80_{}'.format(i)]['Ftot']==min(globals()['dfoc110v80_{}'.format(i)]['Ftot'][0:limit80]))[0][-1]
+#        oc110_vel80[i,1] =np.round(globals()['dfoc110v80_{}'.format(i)]['time'][jj1],1)
+#
+#        limit20=np.where(globals()['dfoc110v20_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['oc110v20_min{}'.format(i)]=min(globals()['dfoc110v20_{}'.format(i)]['Ftot'][0:limit20])/1e12
+#        globals()['oc110v20min{}'.format(i)][i,0] = (globals()['oc110v20_min{}'.format(i)])
+#        oc110_vel20[i,0] = (globals()['oc110v20_min{}'.format(i)])
+#        jj4 = np.where(globals()['dfoc110v20_{}'.format(i)]['Ftot']==min(globals()['dfoc110v20_{}'.format(i)]['Ftot'][0:limit20]))[0][-1]
+#        oc110_vel20[i,1] =np.round(globals()['dfoc110v20_{}'.format(i)]['time'][jj4],1)
+#        
+#        limit4=np.where(globals()['dfoc110v4_{}'.format(i)]['shorten']<lim)[0][-1]
+#        globals()['oc110v4_min{}'.format(i)]=min(globals()['dfoc110v4_{}'.format(i)]['Ftot'][0:limit4])/1e12
+#        globals()['oc110v4min{}'.format(i)][i,0] = (globals()['oc110v4_min{}'.format(i)])
+#        oc110_vel4[i,0] = (globals()['oc110v4_min{}'.format(i)])
+#        jj5 = np.where(globals()['dfoc110v4_{}'.format(i)]['Ftot']==min(globals()['dfoc110v4_{}'.format(i)]['Ftot'][0:limit4]))[0][-1]
+#        oc110_vel4[i,1] =np.round(globals()['dfoc110v4_{}'.format(i)]['time'][jj5],1)
         
         
 #fig111=plt.figure(111,figsize=(11,8))
-#for i in range(len(delrho2)):
-#    plt.plot(globals()['dfoc60v80_{}'.format(i)]['time'],globals()['dfoc60v80_{}'.format(i)]['Ftot'])
-#    hline=np.linspace(0,5)
+#for i in range(len(delrho)):
+#    plt.plot(globals()['dfslab80v80_{}'.format(i)]['time'],globals()['dfslab80v80_{}'.format(i)]['Ftot'])
+#    hline=np.linspace(0,15)
 #    plt.plot(hline,(hline*0)-3e12,'k',alpha=0.4)
-#    plt.xlim(0,5)
+##    plt.xlim(0,5)
+#    plt.ylim(-4e12,2e12)
 #    plt.show()    
         
     def ismin(df_file):
-        limit=np.where(df_file['shorten']<400)[0][-1]
+        limit=np.where(df_file['shorten']<800)[0][-1]
         jj=np.where(df_file['Ftot']==min(df_file['Ftot'][0:limit]))[0][-1]
         
         if df_file['Ftot'][jj] < df_file['Ftot'][jj+3]:
@@ -936,7 +508,7 @@ if (rho_contrast2>0.):
         return round(x, sig-int(np.floor(np.log10(abs(x))))-1)
     
     def find3(df,delrho,th,k):
-        limit=np.where(df['shorten']<400)[0][-1]
+        limit=np.where(df['shorten']<800)[0][-1]
         if ismin(df)==1:
             lims=np.where(df['Ftot']==min(df['Ftot'][0:limit]))[0][-1]
         else:
@@ -977,6 +549,13 @@ if (rho_contrast2>0.):
     oc110v20_ = np.zeros((len(delrho2),2))
     oc110v80_ = np.zeros((len(delrho2),2))
     
+#    for i in range(len(delrho)):
+#        plt.plot(globals()['dfslab80v80_{}'.format(i)]['shorten'],globals()['dfslab80v80_{}'.format(i)]['Ftot'],label=str(delrho[i]))
+#        plt.ylim(-3e+12,2e+12)
+#        plt.legend()
+#        plt.xlim(0,400)
+
+    
     for i in range(len(delrho)):
         th80v4=find3(globals()['dfslab80v4_{}'.format(i)],delrho,th80v4_,i)
         th80v20=find3(globals()['dfslab80v20_{}'.format(i)],delrho,th80v20_,i)
@@ -985,17 +564,17 @@ if (rho_contrast2>0.):
         th160v20=find3(globals()['dfslab160v20_{}'.format(i)],delrho,th160v20_,i)
         th160v80=find3(globals()['dfslab160v80_{}'.format(i)],delrho,th160v80_,i)
         
-    for i in range(len(delrho2)):
-        oc60v4=find3(globals()['dfoc60v4_{}'.format(i)],delrho2,oc60v4_,i)
-        oc60v20=find3(globals()['dfoc60v20_{}'.format(i)],delrho2,oc60v20_,i)
-        oc60v80=find3(globals()['dfoc60v80_{}'.format(i)],delrho2,oc60v80_,i)       
-        oc110v4=find3(globals()['dfoc110v4_{}'.format(i)],delrho2,oc110v4_,i)
-        oc110v20=find3(globals()['dfoc110v20_{}'.format(i)],delrho2,oc110v20_,i)
-        oc110v80=find3(globals()['dfoc110v80_{}'.format(i)],delrho2,oc110v80_,i)            
+#    for i in range(len(delrho2)):
+#        oc60v4=find3(globals()['dfoc60v4_{}'.format(i)],delrho2,oc60v4_,i)
+#        oc60v20=find3(globals()['dfoc60v20_{}'.format(i)],delrho2,oc60v20_,i)
+#        oc60v80=find3(globals()['dfoc60v80_{}'.format(i)],delrho2,oc60v80_,i)       
+#        oc110v4=find3(globals()['dfoc110v4_{}'.format(i)],delrho2,oc110v4_,i)
+#        oc110v20=find3(globals()['dfoc110v20_{}'.format(i)],delrho2,oc110v20_,i)
+#        oc110v80=find3(globals()['dfoc110v80_{}'.format(i)],delrho2,oc110v80_,i)            
     
-    zz7=np.array(dfslab80v20_7['Ftot'][0:np.where(dfslab80v20_7['shorten']<400)[0][-1]])
-    mm7=np.array([round_sig(mm,3) for mm in zz7])
-    th80v20[7,1]=dfslab80v20_7['time'][max(np.where(mm7>=-2.9e+12)[0])]
+#    zz7=np.array(dfslab80v20_7['Ftot'][0:np.where(dfslab80v20_7['shorten']<400)[0][-1]])
+#    mm7=np.array([round_sig(mm,3) for mm in zz7])
+#    th80v20[7,1]=dfslab80v20_7['time'][max(np.where(mm7>=-2.9e+12)[0])]
 
 
     
@@ -1015,13 +594,13 @@ if (rho_contrast2>0.):
 #    ax1.plot([], [], ' ', label=" ")
 #    ax1.annotate("80km", xy=(50.8,1.18),xycoords='data',fontsize=14)
 #    fig111.texts.append(ax1.texts.pop())
-    ax1.semilogy(th80v4[:4,0],th80v4[:4,1],'-',linewidth=3, color='blue',alpha=0.6,label=' ')
-    ax1.semilogy(th80v20[:8,0],th80v20[:8,1],'-', linewidth=3,color='blue',alpha=0.8,label=' ')
+    ax1.semilogy(th80v4[:11,0],th80v4[:11,1],'-',linewidth=3, color='blue',alpha=0.6,label=' ')
+    ax1.semilogy(th80v20[:12,0],th80v20[:12,1],'-', linewidth=3,color='blue',alpha=0.8,label=' ')
     ax1.semilogy(th80v80[:15,0],th80v80[:15,1],'-',linewidth=3, color='blue',alpha=1,label=' ')
     
-    ax1.semilogy(th160v4[:21,0],th160v4[:21,1],'-',linewidth=3,color='red',alpha=0.6,label='4')
-    ax1.semilogy(th160v20[:25,0],th160v20[:25,1],'-',linewidth=3,color='red',alpha=0.8,label='20')
-    ax1.semilogy(th160v80[:28,0],th160v80[:28,1],'-',linewidth=3,color='red',alpha=1,label='80') 
+    ax1.semilogy(th160v4[:14,0],th160v4[:14,1],'-',linewidth=3,color='red',alpha=0.6,label='4')
+    ax1.semilogy(th160v20[:16,0],th160v20[:16,1],'-',linewidth=3,color='red',alpha=0.8,label='20')
+    ax1.semilogy(th160v80[:19,0],th160v80[:19,1],'-',linewidth=3,color='red',alpha=1,label='80') 
     
 #    ax1.semilogy(oc60v4[:12,0],oc60v4[:12,1],'--',linewidth=3, color='green',alpha=0.6,label=' ')
 #    ax1.semilogy(oc60v20[:17,0],oc60v20[:17,1],'--',linewidth=3, color='green',alpha=0.8,label=' ')
@@ -1034,7 +613,7 @@ if (rho_contrast2>0.):
 #    fig111.texts.append(ax1.texts.pop())
 
     x_geo = [2, 12, 12]
-    y_geo = [35, 2, 0.85]
+    y_geo = [140, 16, 5]
     xerror = [3., 3., 3.]
     yerror = [10.,0.5,0.35]
 
@@ -1047,9 +626,9 @@ if (rho_contrast2>0.):
 #    ax1.text(x_geo[2],y_geo[2]-0.2, 'Tibet',fontsize=18,color='red')
    
     
-    txt001=ax1.annotate("Never reach $F_{b,ref}$", xy=(56,46),xycoords='data',ha='center',fontsize=18,color='k')
+#    txt001=ax1.annotate("Never reach $F_{b,ref}$", xy=(50,100),xycoords='data',ha='center',fontsize=18,color='k')
 #    txt001.set_path_effects([PathEffects.withStroke(linewidth=3, foreground='w')])
-    txt002=ax1.annotate("Never reach $F_{b,ref}$", xy=(25,46),xycoords='data',ha='center',fontsize=18,color='k')
+#    txt002=ax1.annotate("Never reach $F_{b,ref}$", xy=(25,46),xycoords='data',ha='center',fontsize=18,color='k')
 
 #    fig111.texts.append(ax1.texts.pop())
     
@@ -1058,14 +637,13 @@ if (rho_contrast2>0.):
 #    ax1.axvspan(43, 90, facecolor = 'blue', alpha = 0.1,zorder=0)
 
     xxx =np.linspace(0,500,400)
-    xx=np.linspace(0,80,100)
-#    yyy1=p_thick(np.linspace(0,80,100))
-#    yyy2=p_thin(np.linspace(0,80,100))
-    yyy1= 0.8693009 + (56839.67*np.exp(xxx[:]*-0.178609))  #160
-    yyy2= 4.523505+(934.7117*np.exp(xxx[:]*-0.3739652))  # 80
-    yyy3 = (yyy1*0)
-    ax1.fill(xxx, yyy1, 'r', alpha=0.4,zorder=1)
-    ax1.fill_between(xxx, yyy1,yyy2,where=yyy1 >yyy2, facecolor='blue', alpha=0.4,zorder=1)
+    xx=np.linspace(0,100,200)
+    yyy1= 7.924411 + (21145600*np.exp(xxx[:]*-0.4438307))  #160
+    yyy2= 10.19748 +(17163320000.000002*np.exp(xxx[:]*-0.9071552))  # 80
+#    yyy3 = (yyy1*0)
+    ax1.fill(xxx, yyy2, color='#6DA7E5', alpha=1,zorder=0)
+    ax1.fill(xxx, yyy1, color='#FE5757', alpha=1,zorder=1)
+
 
 #    ax1.fill_between(xxx, yyy2, yyy3, where=(xxx>=8) & (xxx<=29) , facecolor='red', alpha=0.2,zorder=1)
 #    ax1.fill_between(xxx, yyy2, yyy3, where=(xxx>=12) & (xxx<=54) , facecolor='green', alpha=0.2,zorder=1)
@@ -1086,46 +664,46 @@ if (rho_contrast2>0.):
         ax.annotate( text, xy=(xcenter,ytext), ha='center', va='center', fontsize=fontsize)
 #            
 
-    ax1.text(22,0.158, 'Tecton',fontsize=15,color='red',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)   
+    ax1.text(22,1.258, 'Tecton',fontsize=15,color='red',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)   
 #    ax1.text(19,0.428, 'Tecton',fontsize=15,color='red',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
-    ax1.text(32,0.131, 'Proton',fontsize=15,color='green',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
-    ax1.text(52,0.158, 'Archon',fontsize=15,color='purple',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
-    ax1.text(7,0.192, 'Oceanic',fontsize=15,color='magenta',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
+    ax1.text(32,1.18, 'Proton',fontsize=15,color='green',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
+    ax1.text(52,1.258, 'Archon',fontsize=15,color='purple',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
+    ax1.text(7,1.395, 'Oceanic',fontsize=15,color='magenta',bbox=dict(facecolor='white', alpha=1, edgecolor='white'),zorder=0)
 
-    ax1.fill([8,29,29,8],[0.124,0.124,0.15,0.15],color='red',alpha=0.4)
-    ax1.fill([12,61,61,12],[0.1,0.1,0.124,0.124],color='green',alpha=0.4)
-    ax1.fill([43,70,70,43],[0.124,0.124,0.15,0.15],color='purple',alpha=0.4)
-    ax1.fill([0,17,17,0],[0.15,0.15,0.185,0.185],color='magenta',alpha=0.5)
+    ax1.fill([8,29,29,8],[1.124,1.124,1.25,1.25],color='red',alpha=0.4)
+    ax1.fill([12,61,61,12],[1.0,1.0,1.124,1.124],color='green',alpha=0.4)
+    ax1.fill([43,70,70,43],[1.124,1.124,1.25,1.25],color='purple',alpha=0.4)
+    ax1.fill([0,17,17,0],[1.25,1.25,1.385,1.385],color='magenta',alpha=0.5)
     
 
     hline=np.linspace(min(delrho),max(delrho))
     ax1.plot(hline,hline*0,'k',alpha=0.4)
 
-    txt1=ax1.text(32,18, '4',fontsize=18,color='red')
-    txt1.set_path_effects([PathEffects.withStroke(linewidth=2, foreground='w')])
-    txt2=ax1.text(42,4.7, '20',fontsize=18,color='red')
-    txt2.set_path_effects([PathEffects.withStroke(linewidth=2, foreground='w')])
-    ax1.text(48,1.08, '80  $mm$ $yr^{-1}$',fontsize=18,color='red',ha='center')
+#    txt1=ax1.text(32,18, '4',fontsize=18,color='red')
+#    txt1.set_path_effects([PathEffects.withStroke(linewidth=2, foreground='w')])
+#    txt2=ax1.text(42,4.7, '20',fontsize=18,color='red')
+#    txt2.set_path_effects([PathEffects.withStroke(linewidth=2, foreground='w')])
+#    ax1.text(28,6, '80  $mm$ $yr^{-1}$',fontsize=18,color='red',ha='center')
     
-    ax1.text(3.5,50, '4',fontsize=18,color='blue')
-    ax1.text(6,5, '20',fontsize=18,color='blue')
-    ax1.text(28,2., '80 $mm$ $yr^{-1}$',fontsize=18,color='blue',ha='center')
+#    ax1.text(3.5,50, '4',fontsize=18,color='blue')
+#    ax1.text(6,5, '20',fontsize=18,color='blue')
+#    ax1.text(28,2., '80 $mm$ $yr^{-1}$',fontsize=18,color='blue',ha='center')
     
-    ax1.plot(17,0.197, marker=r'$\downarrow$',markersize=12,color='magenta')
-    ax1.plot(19,0.165, marker=r'$\downarrow$',markersize=12,color='red')
-    ax1.plot(39,0.137, marker=r'$\downarrow$',markersize=12,color='green')
-    ax1.plot(68,0.165, marker=r'$\downarrow$',markersize=12,color='purple')
+    ax1.plot(17,1.48, marker=r'$\downarrow$',markersize=12,color='magenta')
+    ax1.plot(19,1.35, marker=r'$\downarrow$',markersize=12,color='red')
+    ax1.plot(39,1.237, marker=r'$\downarrow$',markersize=12,color='green')
+    ax1.plot(68,1.35, marker=r'$\downarrow$',markersize=12,color='purple')
 
 #    ax1.legend(title="v (mm/yr)",ncol=2,columnspacing=-0.2,labelspacing=-0.01,loc='lower right', fontsize=15,frameon=True,bbox_to_anchor=(0.98,0.08))
 #    ax1.get_legend().get_title().set_fontsize('16')
   
     ax1.set_xlim(min(delrho),70)
-    ax1.set_ylim((0.1, 110))
+    ax1.set_ylim((1, 300))
 #    ax2.set_ylim(0,15)
     
 #    ax1.set_title("$F_{buoy}$ = -3e12 $N/m$", fontsize=20, fontweight='bold', loc='center',y=1.02)
-    ax1.set_xlabel('$/bigtriangleup /rho_{LAB} = /rho_{asth} - /rho_{lith}$ ($kg m^{-3}$)',fontsize=20,fontweight='bold')
-    ax1.set_ylabel('Time needed for $F_{b,ref}$ = -3 $TNm^{-1}$ ($Myr$)',fontsize=20,fontweight='bold')
+    ax1.set_xlabel(r"$\bigtriangleup \rho_{LAB} = \rho_{asth} - \rho_{lith}$ ($kg$ $m^{-3}$)",fontsize=20)
+    ax1.set_ylabel('Time needed for $F_{b,ref}$ = -3 $TNm^{-1}$ ($Myr$)',fontsize=20)
 
     ax1.tick_params(direction='in',which='both',labelbottom=True, labeltop=False, labelleft=True, labelright=False,
              bottom=True, top=True, left=True, right=True)
@@ -1146,7 +724,8 @@ if (rho_contrast2>0.):
     ax1.grid(linestyle='dotted')
     ax1.xaxis.grid() 
     plt.setp(ax1.spines.values(), color='k', linewidth=2)
-    ax1.set_yticklabels(['10','0.1','1','10','100'])
+    ax1.set_yticklabels(['10','1','10','100','100'])
+    ax1.set_xticklabels(['0','10','20','30','40','50','60','70'])
 
 #    cax, _ = matplotlib.colorbar.make_axes(ax1)
 #    cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, norm=normalize)
@@ -1160,7 +739,7 @@ if (rho_contrast2>0.):
     plt.show()
     print("Images in directory %s" % dir)
     os.chdir(dir)
-    fig111.savefig('rhocontrast_Fb_2.png', format='png', dpi=300)
+    fig111.savefig('rhocontrast_Fb_2.png', format='png', dpi=600)
     os.chdir('..')    
     
     
@@ -1392,11 +971,11 @@ if (rho_contrast3>0.):
 
     
     ax1.set_title("$F_{buoy}$ = -3e12 $N/m$, wihin d=400km", fontsize=20, fontweight='bold', loc='center',y=1.02)
-    ax1.set_xlabel('$/bigtriangleup /rho_{LAB} = /rho_{asth} - /rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold')
+    ax1.set_xlabel(r"$\bigtriangleup \rho_{LAB} = \rho_{asth} - \rho_{lith}$ ($kg/m^{3}$)",fontsize=20,fontweight='bold')
     ax1.set_ylabel('log(Time) ($Myr$)',fontsize=20,fontweight='bold')
     
     ax2.set_title("$F_{buoy}$ = -3e12 $N/m$, wihin d=400km", fontsize=20, fontweight='bold', loc='center',y=1.02)
-    ax2.set_xlabel('$/bigtriangleup /rho_{LAB} = /rho_{asth} - /rho_{lith}$ ($kg/m^{3}$)',fontsize=20,fontweight='bold')
+    ax2.set_xlabel(r"$\bigtriangleup \rho_{LAB} = \rho_{asth} - \rho_{lith}$ ($kg/m^{3}$)",fontsize=20,fontweight='bold')
 
     ax1.tick_params(direction='in',which='both',labelbottom=True, labeltop=False, labelleft=True, labelright=False,
              bottom=True, top=True, left=True, right=True,zorder=9)
@@ -1572,7 +1151,7 @@ if (buoyancy_plot >0.):
     # tmyr_array,  short_array,  y_plot,  Tslice2,  rho_slice2
 #    count = 0
     plt.rc('axes', linewidth=2)
-    df=pd.read_csv('Proton_review_vel_30.csv')
+    df=pd.read_csv('Proton_manu2_vel_40.csv')
     shorten = df['shorten'].values
     time = df['time'].values
     Ftot = df['Ftot'].values
@@ -1596,10 +1175,10 @@ if (buoyancy_plot >0.):
     ax1.plot(df['time'],df['Fdiffus']/1e12, 'r', linewidth=3,label='$F_{d}$')
 #    ax1.set_title('Buoyancy Plot, Proton 30 mm/yr', fontsize=20)
     ax1.set_xlabel('Time ($Myr$)', fontsize=30)
-    ax1.set_ylabel('Buoyancy force ($TNm^{-1}$)', fontsize=30)
+    ax1.set_ylabel('$F_b$ ($T Nm^{-1}$)', fontsize=30)
     ax1.plot(df['time'],df['Ftot']*0,'k',alpha=0.4,label='_nolabel_')
     ax1.set_ylim(-12,12)
-    ax1.set_xlim(0,time[aa])
+    ax1.set_xlim(0,round(time[aa]))
 #    ax1.grid(linestyle='dotted')
 #    ax1.xaxis.grid() 
 
@@ -1607,7 +1186,7 @@ if (buoyancy_plot >0.):
     ax2.plot(df['shorten'],df['Ftot']/1e12,'k', alpha=0.0)
 #    ax2.plot(range(400),np.zeros(400))
 #    ax2.set_xlim(0,400)
-    ax2.set_xlim(0,shorten[aa])
+    ax2.set_xlim(0,round(shorten[aa])+1)
     ax2.set_xlabel('Shortening ($km$)', fontsize=30,labelpad=20)
     
     ax3 = plt.axes([0.17, 0.57, .25, .25])
@@ -1633,16 +1212,16 @@ if (buoyancy_plot >0.):
     ax4.tick_params(which='major', length=5,width=1)
     ax4.tick_params(which='minor', length=5)
     markers_on = [np.where(Ftot==min(Ftot))[0][0],
-                  np.where(np.ceil(time)==17)[0][4],
+                  np.where(np.ceil(time)==10)[0][4],
                   np.where(Ftot==max(Ftot))[0][0] ]
     ax3.yaxis.set_minor_locator(MultipleLocator(0.5))
     ax3.xaxis.set_minor_locator(MultipleLocator(5))
     ax4.xaxis.set_minor_locator(MultipleLocator(50))
 
     ax3.plot(df['time'],df['Ftot']/1e12, 'bD', markevery=markers_on)
-    ax3.text(3.5, -1.5, '6.4 Myr', fontsize=20)
-    ax3.text(9.5, 0.15, '17 Myr', fontsize=20)
-    ax3.text(21, 0.1, '23.6 \n Myr', fontsize=20)
+    ax3.text(6, -1.2, str(round(time[np.where(Ftot==min(Ftot))[0][0]]))+' Myr', fontsize=20)
+    ax3.text(9.5, -0.15, str(round(time[np.where(np.ceil(time)==10)[0][4]]))+' Myr', fontsize=20)
+    ax3.text(13.5, 1.3, str(round(time[np.where(Ftot==max(Ftot))[0][0]]))+' Myr', fontsize=20)
 #    ax3.minorticks_on()
     
     ax1.xaxis.set_tick_params(labelsize=30)
@@ -1672,9 +1251,9 @@ if (buoyancy_plot >0.):
 if (Trho_evol >0.):
     # tmyr_array,  short_array,  y_plot,  Tslice2,  rho_slice2
 #    count = 0
-    dens_data = np.loadtxt("colormap/lajolla.txt")
-    CBdens_map = LinearSegmentedColormap.from_list('CBdens', dens_data[::-1])
-    df=np.loadtxt('review_Proton30_slices.txt', dtype=float)
+#    dens_data = np.loadtxt("colormap/lajolla.txt")
+#    CBdens_map = LinearSegmentedColormap.from_list('CBdens', dens_data[::-1])
+    df=np.loadtxt('manu2_Proton40_slices.txt', dtype=float)
     xx=np.int(np.shape(df)[0])
     yy=np.int(np.round(np.shape(df)[1]/5-2))
     age=np.zeros((xx,yy))
@@ -1704,7 +1283,7 @@ if (Trho_evol >0.):
     hline1=np.linspace(min(Tslice[:,1]),max(Tslice[:,1]))
     hline2=np.linspace(min(rhoslice[:,1]),max(rhoslice[:,1]))
         
-    s=[0.0,2.0,6.0,12.0,16.0,21.0]
+    s=[0.0,2.0,4.0,8.0,12.0,16.0]
 #    if any(s in np.round(age[1],-1) for s in [2.0,5.0,10.0,15.0,20.0]):
 #        s=np.round(age[1],-2)
     for i in range (0,np.size(s)):   
@@ -1713,7 +1292,7 @@ if (Trho_evol >0.):
         
         
 
-    fig99.clf() 
+#    fig99.clf() 
     for i in range (0,np.size(col)):
         fig99 = plt.figure(13,figsize=(15,10))
         ax1=plt.subplot(121)
@@ -1725,7 +1304,7 @@ if (Trho_evol >0.):
 #        ax1.plot(Tslice[:,col[i]],yplot[:,col[i]],color=plt.cm.copper(1.*i/(no_points-1)),\
 #                label=(str(np.int(age[col[0]][col[i]])*30))+' km')
         ax1.plot(hline1,hline1*0+110e3,color = 'k',linestyle='--', linewidth=1,alpha=0.5)
-    #    plt.gca().invert_yaxis()
+#        plt.gca().invert_yaxis()
         
         ax1.legend(title="Shortening",loc='lower left', fontsize=23,fancybox=True, framealpha=0.3)
         ax1.get_legend().get_title().set_fontsize('23')
@@ -1735,7 +1314,7 @@ if (Trho_evol >0.):
         ax1.text(1190,-10e3,'$T$ - profile',fontsize=30)
         ax1.set_ylabel('Depth ($km$)', fontsize=25)
         ax1.set_ylim(600e3,0)
-        ax1.set_xlim(500,max(Tslice[:,1]))
+        ax1.set_xlim(650,max(Tslice[:,1]))
         ax1.invert_yaxis()
         ytick_prof =np.arange(40e3/1000, 650e3 /1000, 100)
         ax1.set_yticklabels(ytick_prof)            
@@ -1753,7 +1332,7 @@ if (Trho_evol >0.):
         ax2.plot(hline2,hline2*0+110e3,color = 'k',linestyle='--', linewidth=1,alpha=0.5)
     #    plt.gca().invert_yaxis()
         ax2.invert_yaxis()
-        ax2.text(3730,-10e3,'$/rho$ - profile',fontsize=30)
+        ax2.text(3730,-10e3,r'$\rho$ - profile',fontsize=30)
         ax2.legend(title="Time",loc='lower left', fontsize=23,fancybox=True, framealpha=0.3)
         ax2.get_legend().get_title().set_fontsize('23')
         ax2.grid(linestyle='dotted')
@@ -1763,8 +1342,8 @@ if (Trho_evol >0.):
 #            ax2.set_ylim(600e3,0)
 #            ytick_prof = np.arange(40e3/1000, 1500e3 /1000, 100)
 #            ax2.set_yticklabels(ytick_prof)
-        ax2.set_xlim(min(rhoslice[:,1]),max(rhoslice[:,1]))
-        ax2.xaxis.set_ticks(np.arange(min(rhoslice[:,1]), max(rhoslice[:,1]), 200))
+        ax2.set_xlim(np.round(min(rhoslice[:,1])),np.round(max(rhoslice[:,1])))
+        ax2.xaxis.set_ticks(np.arange(np.round(min(rhoslice[:,1])), np.round(max(rhoslice[:,1]))+200, 200))
         ax2.tick_params(labelsize=22)
         ax2.tick_params(axis='x', pad=12)
         ax2.tick_params(direction='in',which='both',labelbottom=True, labeltop=False, labelleft=True, labelright=False,
@@ -1778,6 +1357,8 @@ if (Trho_evol >0.):
         plt.pause(0.0005)
         plt.show()
 #        count=count+1
+        ax1.invert_yaxis()
+        ax2.invert_yaxis()
     fig99.subplots_adjust(wspace=0.25, hspace=0.15)
     print("Images in directory %s" % dir)
     os.chdir(dir)
@@ -2192,9 +1773,9 @@ if(Tecton_FbouyTime>0.):
 
 if(Tecton_FbouyShorten>0.):
     thick=['60km','80km (default)','110km']
-    tec1=pd.read_csv('Tecton_lab100_vel_30.csv')
-    tec2=pd.read_csv('Tecton_lab120_vel_30.csv')
-    tec3=pd.read_csv('Tecton_lab150_vel_30.csv')
+    tec1=pd.read_csv('Tecton_lab100_vel_40.csv')
+    tec2=pd.read_csv('Tecton_lab120_vel_40.csv')
+    tec3=pd.read_csv('Tecton_lab150_vel_40.csv')
     shorten = tec1['shorten'].values
     time = tec1['time'].values
     aa=np.where(np.round(shorten)==400)[0][-1]
@@ -2308,23 +1889,23 @@ if(Tecton_FbouyShorten>0.):
     ax4.xaxis.set_major_locator(MultipleLocator(2))
     
     ax1.text(0.9, 0.12, '(a)',color='k', \
-             transform=ax1.transAxes, fontsize=25, \
-             fontweight='bold',verticalalignment='top')
+             transform=ax1.transAxes, fontsize=24, \
+             fontweight='normal',verticalalignment='top')
     ax2.text(0.02, 0.12, '(b)',color='k', \
-             transform=ax2.transAxes, fontsize=25, \
-             fontweight='bold',verticalalignment='top')
+             transform=ax2.transAxes, fontsize=24, \
+             fontweight='normal',verticalalignment='top')
     
-    ax1.set_ylim(-10,0)
+    ax1.set_ylim(-8,0)
     ax2.set_ylim(-15,10)
 #    plt.setp(ax2.get_yticklabels(), visible=False)
     plt.setp(ax1.spines.values(), color='k', linewidth=1.5)
     plt.setp(ax2.spines.values(), color='k', linewidth=1.5)
-    ax1.set_xlabel('Shortening ($km$)',fontsize=20, fontweight='bold')
-    ax2.set_xlabel('Shortening ($km$)',fontsize=20, fontweight='bold')
-    ax1.set_ylabel('F$_{b}$ ($TNm^{-1}$)',fontsize=20, fontweight='bold')
-    ax2.set_ylabel('Buoyancy Force ($TNm^{-1}$)',fontsize=20, fontweight='bold') 
-    ax3.set_xlabel(r"Time ($Myr$)",fontsize=20, fontweight='bold')
-    ax4.set_xlabel(r"Time ($Myr$)",fontsize=20, fontweight='bold')
+    ax1.set_xlabel('Shortening ($km$)',fontsize=19, fontweight='normal')
+    ax2.set_xlabel('Shortening ($km$)',fontsize=19, fontweight='normal')
+    ax1.set_ylabel('F$_{b}$ ($TNm^{-1}$)',fontsize=19, fontweight='normal')
+    ax2.set_ylabel('Buoyancy Force ($TNm^{-1}$)',fontsize=19, fontweight='normal') 
+    ax3.set_xlabel(r"Time ($Myr$)",fontsize=19, fontweight='normal')
+    ax4.set_xlabel(r"Time ($Myr$)",fontsize=19, fontweight='normal')
     
     ax1.legend(title='Slab thickness',fontsize=16, fancybox=True, loc='lower left')#, bbox_to_anchor=(0.55,0.07))
     
@@ -2366,11 +1947,11 @@ if(Tecton_FbouyShorten>0.):
 #    ax1.set_title('Tecton, 'r'$ v=30mm/yr$', fontsize=20, fontweight='normal', loc='right',y=1.17)
 #    ax2.set_title('Tecton, 'r'$ v=30mm/yr$', fontsize=20, fontweight='normal', loc='right',y=1.17)
     
-#    fig6.tight_layout()
+    fig6.tight_layout()
 #    plt.show()
     print("Images in directory %s" % dir)
     os.chdir(dir)
-    fig6.savefig('TectonFbShorten_'+exp_name+'_vels.png', format='png', dpi=600)
+    fig6.savefig('TectonFbShorten_'+exp_name+'_vels.eps', format='eps', dpi=600)
     os.chdir('..')
 
 if(Effect_advA>0.):
@@ -2721,19 +2302,19 @@ if(FtotShorten>0.):
 #        sns.despine(right=True,top=True)
         globals()['ax{}'.format(i+1)].text(0.02, 0.1, mtype[i],color=color[i], \
                   transform=globals()['ax{}'.format(i+1)].transAxes, fontsize=22, \
-                  fontweight='bold',verticalalignment='top')
+                  fontweight='normal',verticalalignment='top')
         globals()['ax{}'.format(i+1)].text(0.02, 0.96, abc[i],color=color[i], \
                   transform=globals()['ax{}'.format(i+1)].transAxes, fontsize=22, \
-                  fontweight='bold',verticalalignment='top')
+                  fontweight='normal',verticalalignment='top')
         plt.setp(globals()['ax{}'.format(i+1)].spines.values(), color='k', linewidth=1.5)
 #        globals()['ax{}'.format(i+1)].minorticks_on()
         globals()['ax{}'.format(i+1)].xaxis.set_minor_locator(MultipleLocator(20))
 
     ax4.text(0.12, 0.95, 'OC30ma   - dash' , \
-                  transform=globals()['ax{}'.format(i+1)].transAxes, fontsize=20, \
+                  transform=globals()['ax{}'.format(i+1)].transAxes, fontsize=18, \
                   fontweight='normal',verticalalignment='top')
     ax4.text(0.12, 0.87, 'OC120ma - solid' , \
-                  transform=globals()['ax{}'.format(i+1)].transAxes, fontsize=20, \
+                  transform=globals()['ax{}'.format(i+1)].transAxes, fontsize=18, \
                   fontweight='normal',verticalalignment='top')
                   
   
@@ -2779,13 +2360,13 @@ if(FtotShorten>0.):
     ax4.tick_params(which='major', length=12,width=1)
     ax4.tick_params(which='minor', length=5)
     
-    ax1.legend(title="v ($mm$$yr^{-1}$)",ncol=2,columnspacing=0.1,labelspacing=0.3,loc='lower right', fontsize=16,frameon=True)
+    ax1.legend(title="v ($mm$ $yr^{-1}$)",ncol=2,columnspacing=0.1,labelspacing=0.3,loc='lower right', fontsize=16,frameon=True)
     ax1.get_legend().get_title().set_fontsize('17')
 
-    ax4.set_xlabel('Shortening ($km$)',fontsize=lab_size, fontweight='bold')
-    ax3.set_xlabel('Shortening ($km$)',fontsize=lab_size, fontweight='bold')
-    ax1.set_ylabel('F$_{b}$ ($T$ $Nm^{-1}$)',fontsize=lab_size, fontweight='bold')
-    ax3.set_ylabel('F$_{b}$ ($T$ $Nm^{-1}$)',fontsize=lab_size, fontweight='bold')
+    ax4.set_xlabel('Shortening ($km$)',fontsize=lab_size, fontweight='normal')
+    ax3.set_xlabel('Shortening ($km$)',fontsize=lab_size, fontweight='normal')
+    ax1.set_ylabel('F$_{b}$ ($T$ $Nm^{-1}$)',fontsize=lab_size, fontweight='normal')
+    ax3.set_ylabel('F$_{b}$ ($T$ $Nm^{-1}$)',fontsize=lab_size, fontweight='normal')
     ax1.grid(linestyle='dotted')
     ax1.xaxis.grid()
     ax2.grid(linestyle='dotted')
@@ -2796,8 +2377,8 @@ if(FtotShorten>0.):
     ax4.xaxis.grid()
     
     ax1.set_ylim(-2,8)
-    ax2.set_ylim(-4,6)
-    ax3.set_ylim(-6,1)
+    ax2.set_ylim(-3,7)
+    ax3.set_ylim(-5,1)
     ax4.set_ylim(-8,2)
     
 
@@ -2807,7 +2388,7 @@ if(FtotShorten>0.):
 #    plt.setp(ax2.get_xticklabels(), visible=False)
 #    plt.setp(ax3.get_xticklabels(), visible=False)
 #    plt.setp(ax4.get_xticklabels(), visible=False)
-    ax1.set_title("Effect of convergence velocity", fontsize=20, fontweight='bold', loc='left',y=1.05)
+    ax1.set_title("Effect of convergence velocity", fontsize=20, fontweight='normal', loc='left',y=1.05)
     
     fig13.tight_layout()
 #    plt.subplots_adjust(wspace = 0.2, hspace = 0.5)
@@ -3024,7 +2605,7 @@ if(InitTrho>0.):
     ax2.plot(hline2,hline2*0+70,color='xkcd:sienna',linestyle='--', linewidth=1,alpha=opaq)
     ax2.plot(Toc2[uplim1::,2],-(Toc2[uplim1::,0]),'-m', linewidth=1,label='OC120ma')
     ax2.plot(hline2,hline2*0+110,color = 'm',linestyle='--', linewidth=1,alpha=opaq)
-    ax2.set_xlabel('Density ($kg$ $m^{-3}$)',fontweight='normal',fontsize=20)
+    ax2.set_xlabel('Density ($kg$ $m^{-3}$)',fontweight='normal',fontsize=18)
 #    ax2.set_ylabel('Depth ($km$)',fontweight='bold',fontsize=22)
 #    ax2.set_ylim(0,600)
     ax2.set_xlim(min(Toc1[uplim1::,2])-10,max(Toc1[:,2]))
@@ -3039,9 +2620,10 @@ if(InitTrho>0.):
 #    ax2.text(3790, 68, r'70km',fontsize=19, color='xkcd:sienna')
 #    ax2.text(3720, 25, r'LAB depth',fontsize=19, color='k')
     
-    ax2.text(3400,22, '$10 km - MOHO_{oceanic}$',fontsize=13, color='k')
-    ax2.text(3400,52, '$40 km - MOHO_{continental}$',fontsize=13, color='k')
+    ax2.text(3400,22, '10 km - $MOHO_{oceanic}$',fontsize=13, color='k')
+    ax2.text(3400,52, '40 km - $MOHO_{continental}$',fontsize=13, color='k')
     
+
     
     ax1.tick_params(direction='in',which='both',labelbottom=True, labeltop=False, labelleft=True, labelright=False,
              bottom=True, top=True, left=True, right=True)
@@ -3075,7 +2657,7 @@ if(InitTrho>0.):
     plt.show()
     print("Images in directory %s" % dir)
     os.chdir(dir)
-    fig8.savefig('InitTrho_'+exp_name+'.png', format='png', dpi=300)
+    fig8.savefig('InitTrho_'+exp_name+'.eps', format='eps', dpi=600)
     os.chdir('..')
 
 if(ComponentsTime>0.):

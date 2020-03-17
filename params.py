@@ -30,20 +30,21 @@ import sys
 For sequential run, BASH Script
 Testing del_rho 
 """
-mman = np.int(sys.argv[1])
-velocity = np.int(sys.argv[2])
-rr=np.int(sys.argv[3]) # prints var1)
-
-delrho=np.arange(0,82,2)
-
-
-man_type=mman
+#mman = np.int(sys.argv[1])
+#velocity = np.int(sys.argv[2])
+#rr=np.int(sys.argv[3]) # prints var1)
+#
+#delrho=np.arange(0,82,2)
+#
+#
+#man_type=mman
+mman=3
 ############################################
-experiment_number = 'delRho'+str(delrho[rr]) #'manu2' # for the .savefig title -- CHANGE to prevent overwriting
-# velocity = 40  # mm/year
+experiment_number = 'manu2fix' #'delRho'+str(delrho[rr]) #'manu2' # for the .savefig title -- CHANGE to prevent overwriting
+velocity = 80  # mm/year
 nt = 50001     # nº of steps to run
 save_interval = 100000     # save every n step
-save_figure = True # True or False
+save_figure = False # True or False
 plot_im_subplots = False
 plot_check = False 
 ############################################
