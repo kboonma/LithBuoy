@@ -1,6 +1,8 @@
 # LithBuoy
  A 2D thermally diffusion-advection Python code for study of the buoyancy of lithospheric mantle 
  
+ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4637902.svg)](https://doi.org/10.5281/zenodo.4637902)
+ 
 #### Contents:  
  * **params.py**  - main script / **executable** / change basic paramters  
  * **lithbuoy.py** - sub-routines / time-stepping / calculations  
